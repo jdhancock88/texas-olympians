@@ -1,0 +1,7 @@
+{
+  "name": "texasOlympians",
+  "private": true,
+  "dependencies": {
+    "d3": null
+  }
+}

@@ -1,0 +1,187 @@
+.grid-sizer {
+  width: 23.5%; }
+
+.athlete {
+  width: 23.5%;
+  margin: 0 2% 2% 0;
+  background-color: #f0f0f0;
+  font-family: "Open Sans", Arial, sans-serif;
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: all .4s ease-out;
+  float: left; }
+  .athlete:nth-child(4n+4) {
+    margin-right: 0; }
+  .athlete img {
+    width: 100%; }
+
+.expander {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: white;
+  z-index: 100;
+  font-size: 20px; }
+
+.athContent {
+  padding: 10px;
+  font-family: "Open Sans", Arial, sans-serif;
+  margin-top: -32px; }
+  .athContent h4 {
+    font-weight: bold;
+    font-family: Oswald, Arial, sans-serif; }
+
+.medalGroup {
+  background-color: white;
+  width: 100px;
+  height: 44px;
+  margin: 0 auto;
+  position: relative;
+  padding: 5px;
+  transform: skewX(-20deg);
+  border-radius: 5px;
+  font-family: Oswald, Arial, sans-serif;
+  margin-bottom: 10px; }
+  .medalGroup li {
+    transform: skewX(20deg);
+    display: inline-block;
+    width: 33.3%;
+    text-align: center;
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+    margin-bottom: 0;
+    font-weight: bold;
+    float: left;
+    position: relative;
+    padding-top: 20px;
+    border-right: 1px solid #ebebeb; }
+    .medalGroup li:last-of-type {
+      border-right: none; }
+    .medalGroup li:before {
+      content: "";
+      display: block;
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      border-radius: 50%;
+      left: 50%;
+      margin-left: -8px;
+      top: 0; }
+    .medalGroup li.gold:before {
+      background-color: #edc76f; }
+    .medalGroup li.silver:before {
+      background-color: #c0c0c0; }
+    .medalGroup li.bronze:before {
+      background-color: #cd7f32; }
+
+.info {
+  display: inline-block;
+  margin-right: 20px;
+  font-family: Oswald, Arial, sans-serif; }
+
+.label {
+  font-size: 1.1rem;
+  line-height: 1.5rem;
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 1px solid #797979;
+  font-family: Oswald, Arial, sans-serif;
+  display: inline-block; }
+
+.blurb {
+  font-size: 1.3rem;
+  line-height: 1.8rem;
+  margin-bottom: 0; }
+
+.schedule {
+  font-size: 1.3rem;
+  line-height: 1.8rem;
+  margin-bottom: 0;
+  width: 100%;
+  margin-bottom: 20px; }
+  .schedule tr {
+    text-align: left;
+    border-bottom: 1px solid #797979; }
+  .schedule th {
+    font-weight: bold; }
+  .schedule th, .schedule td {
+    padding: 3px 5px 3px 0; }
+
+.links {
+  font-size: 1.3rem;
+  line-height: 1.8rem;
+  margin-bottom: 1.3rem;
+  font-family: "Open Sans", Arial, sans-serif; }
+
+.moreOverlay {
+  position: absolute;
+  bottom: 0px;
+  height: 60px;
+  width: calc(100% - 20px);
+  background: -moz-linear-gradient(top, rgba(240, 240, 240, 0) 0%, #f0f0f0 26%, #f0f0f0 100%);
+  /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, rgba(240, 240, 240, 0) 0%, #f0f0f0 26%, #f0f0f0 100%);
+  /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, rgba(240, 240, 240, 0) 0%, #f0f0f0 26%, #f0f0f0 100%);
+  /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */ }
+  .moreOverlay button {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    border: 0;
+    background-color: #f0f0f0;
+    display: block;
+    text-align: left;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    padding: 0;
+    font-weight: bold;
+    color: #0185d3;
+    font-family: Oswald, Arial, sans-serif; }
+    .moreOverlay button i {
+      position: relative;
+      top: -1px; }
+
+.expanded {
+  width: 100%;
+  height: 330px;
+  overflow: hidden; }
+  .expanded .expander {
+    top: 20px;
+    right: 20px;
+    color: #212121; }
+  .expanded img {
+    float: left;
+    width: 500px; }
+  .expanded .medalGroup {
+    top: auto;
+    left: auto;
+    float: left;
+    width: auto;
+    height: 28px; }
+    .expanded .medalGroup li {
+      width: 40px;
+      padding: 2px 0 0 25px;
+      text-align: left; }
+      .expanded .medalGroup li:before {
+        left: 0;
+        margin-left: 5px; }
+  .expanded .athContent {
+    float: right;
+    width: calc(100% - 500px);
+    margin-top: 0;
+    height: 330px;
+    overflow-y: auto;
+    padding: 20px; }
+    .expanded .athContent h4 {
+      clear: left; }
+  .expanded .blurb {
+    margin-bottom: 20px; }
+
+.hidden {
+  display: none; }

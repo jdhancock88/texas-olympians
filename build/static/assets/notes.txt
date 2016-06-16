@@ -1,0 +1,13 @@
+Masonry grid of Texas olympians
+  - short bio
+  - you tube
+  - event
+  - hometown
+  - related links
+  - medal
+  - image
+  - sortable by event, medal, hometown
+  - defaults to athletes in next event(s)
+
+
+D3 or table timeline of today's events with the ability to see next days or previous days
