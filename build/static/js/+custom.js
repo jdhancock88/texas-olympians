@@ -143,8 +143,22 @@ $(document).ready(function() {
 				.text(function(d) {return d.bronze;});
 
 
-		athContent.append("h4")
-			.html(function(d){return d.name;});
+		var athName = athContent .append("div")
+			.attr("class", "nameBlock clearFix");
+
+		athName.append("img")
+			.attr("src", function(d) {
+				var country = d.nation.toLowerCase();
+				country = country.replace(/ /g, "");
+				return "images/_" + country + "Flag.jpg";
+			})
+			.attr("alt", function(d) {
+				return d.nation;
+			})
+			.attr("class", "flag");
+
+		athName.append("h4")
+			.html(function(d){return d.name + " <span class='country'>  | " + d.nation + "</span>" ;});
 
 		var athBio = athContent.append("div")
 			.attr("class", "bio");
@@ -160,7 +174,7 @@ $(document).ready(function() {
 			athBio.append("div")
 				.attr("class", "info")
 				.html(function(d) {
-					var bioContent = "<p class='label'>Hometown</p>";
+					var bioContent = "<p class='label'>Texas tie</p>";
 					bioContent += "<h6>" + d.hometown + "</h6>";
  					return bioContent;
 				});

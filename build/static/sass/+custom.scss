@@ -18,15 +18,21 @@
     margin: 0 1% 2% 1%;
     background-color: rgb(240,240,240);
     font-family: $sans;
-    height: 400px;
+    height: 550px;
     overflow: hidden;
-    // position: relative;
-    cursor: pointer;
-    // transition: all .4s ease-out;
-    // float: left;
-
     img {
         width: 100%;
+    }
+    .flag {
+        clear: left;
+        float: left;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin: 5px 5px 0 0;
+    }
+    .schedule, .links {
+        display: none;
     }
 }
 
@@ -36,7 +42,8 @@
     right: 10px;
     color: white;
     z-index: 100;
-    font-size: 20px;
+    font-size: 25px;
+    cursor: pointer;
 }
 
 .athContent {
@@ -48,6 +55,7 @@
         font-family: $custom;
     }
 }
+
 .medalGroup {
     background-color: white;
     width: 100px;
@@ -90,6 +98,11 @@
             background-color: $bronze;
         }
     }
+}
+
+.country {
+    display: none;
+    font-weight: normal;
 }
 
 .info {
@@ -146,7 +159,6 @@
     button {
         position: absolute;
         bottom: 10px;
-        width: 100%;
         border: 0;
         background-color: rgb(240,240,240);
         display: block;
@@ -157,6 +169,13 @@
         font-weight: bold;
         color: $dmnblue;
         font-family: $custom;
+        cursor: pointer;
+        display: inline-block;
+        border-bottom: 2px solid rgb(240,240,240);
+        @include transition(all, .25s, ease-out);
+        &:hover {
+            border-bottom: 2px solid $dmnblue;
+        }
         i {
             position: relative;
             top: -1px;
@@ -166,8 +185,14 @@
 
 .expanded {
     width: 98%;
-    height: 330px;
-    overflow: hidden;
+    height: 500px;
+    .links {
+        display: block;
+    }
+    .schedule {
+        width: 100%;
+        display: table;
+    }
     .expander {
         top: 20px;
         right: 20px;
@@ -176,6 +201,9 @@
     img {
         float: left;
         width: 500px;
+    }
+    .country {
+        display: inline-block;
     }
     .medalGroup {
         top: auto;
@@ -197,10 +225,10 @@
         float: right;
         width: calc(100% - 500px);
         margin-top: 0;
-        height: 330px;
+        height: 500px;
         overflow-y: auto;
         padding: 20px;
-        h4 {
+        .nameBlock {
             clear: left;
         }
     }
