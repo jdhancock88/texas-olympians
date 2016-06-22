@@ -14,19 +14,17 @@
     width: 23.5%;
 }
 .athlete {
-    width: 23.5%;
-    margin: 0 2% 2% 0;
+    width: 23%;
+    margin: 0 1% 2% 1%;
     background-color: rgb(240,240,240);
     font-family: $sans;
     height: 400px;
     overflow: hidden;
-    position: relative;
+    // position: relative;
     cursor: pointer;
-    transition: all .4s ease-out;
-    float: left;
-    &:nth-child(4n+4) {
-        margin-right: 0;
-    }
+    // transition: all .4s ease-out;
+    // float: left;
+
     img {
         width: 100%;
     }
@@ -167,7 +165,7 @@
 }
 
 .expanded {
-    width: 100%;
+    width: 98%;
     height: 330px;
     overflow: hidden;
     .expander {

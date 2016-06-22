@@ -878,18 +878,13 @@ XX. ADS
   width: 23.5%; }
 
 .athlete {
-  width: 23.5%;
-  margin: 0 2% 2% 0;
+  width: 23%;
+  margin: 0 1% 2% 1%;
   background-color: #f0f0f0;
   font-family: "Open Sans", Arial, sans-serif;
   height: 400px;
   overflow: hidden;
-  position: relative;
-  cursor: pointer;
-  transition: all .4s ease-out;
-  float: left; }
-  .athlete:nth-child(4n+4) {
-    margin-right: 0; }
+  cursor: pointer; }
   .athlete img {
     width: 100%; }
 
@@ -1024,7 +1019,7 @@ XX. ADS
       top: -1px; }
 
 .expanded {
-  width: 100%;
+  width: 98%;
   height: 330px;
   overflow: hidden; }
   .expanded .expander {

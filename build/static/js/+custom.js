@@ -104,7 +104,13 @@ $(document).ready(function() {
 			.data(athletes);
 
 		athDivs.enter().append("div")
-			.attr("class", "athlete grid-item");
+			.attr("class", function(d) {
+				var sport = d.sport.toLowerCase();
+				return "athlete " + sport;
+			})
+			.attr("data-athlete", function(d) {
+				return d.name;
+			});
 
 		var expander = athDivs.append("i")
 			.attr("class", "fa fa-plus-circle expander");
@@ -247,40 +253,132 @@ $(document).ready(function() {
 		moreOverlay.html("<i class='fa fa-plus-circle'></i> Read more");
 
 
-		$(".readMore").click(function() {
+		// ENDS D3 ATHLETE DIV SETUP AND BEGINS ASSIGNING FUNCTIONS AND RUNNING LAYOUTS
+
+		// controlling the expanding/collapsing of athlete divs when
+		// the readmore or +/- button is clicked
+
+		$(".readMore, .expander").click(function() {
+			// if the athlete clicked isn't already open ...
 			if ($(this).closest(".athlete").hasClass("expanded") === false) {
-				expand($(this), "expand");
-			} else {
-				expand($(this), "collapse");
+				expand($(this), "expand"); //open the athlete clicked
+				$grid.isotope("layout"); //rerun the isotope layout
 			}
+			// if the athlete is open ...
+			else {
+				expand($(this), "collapse"); // collapse that athlete
+				$grid.isotope("layout"); // rerun the isotope layout
+			}
+
+			// assign the athlete we're clicking on to the movedAthlete variable
+			var movedAthlete = $(this).closest(".athlete");
+
+			// after the animation has finished running, run the checkPosition function
+			setTimeout(function() {
+				checkPosition(movedAthlete);
+			}, 525);
+
 		});
 
-		$(".expander").click(function() {
-			if ($(this).closest(".athlete").hasClass("expanded") === false) {
-				expand($(this), "expand");
-			} else {
-				expand($(this), "collapse");
-			}
-		});
-
+		// initializes isotope
+		runIsotope();
 	}
+
+
+
+	/////////////////////////////////////////////
+	///// CONTROLLING ATHLETE EXPANSION /////////
+	/////////////////////////////////////////////
+
+	// the expand function is passed two parameters, the object we clicked on,
+	// and the direction ("expand" or "collapse")
 
 	function expand(thisObj, direction) {
 
-		var target = thisObj.closest(".athlete");
-		console.log(target);
+		// assigning the athlete variable to the athlete div
+		var athlete = thisObj.closest(".athlete");
 
-		target.find(".expander").toggleClass("fa-plus-circle").toggleClass("fa-minus-circle");
-
+		// let's see what we're doing: expanding or collapsing?
 		if (direction === "expand") {
-			target.find(".moreOverlay").addClass("hidden");
-			target.addClass("expanded");
+
+			// collapse any open athletes, display all hidden read more buttons,
+			// and reset all minus circles to plus circles
+			$(".athlete").removeClass("expanded");
+			$(".athlete").find(".moreOverlay").removeClass("hidden");
+			$(".expander").removeClass("fa-minus-circle").addClass("fa-plus-circle");
+
+			// on the expanding athlete, swap the plus circle for the minus circle,
+			// hide the read more button, then expand with the expanded class
+			athlete.find(".expander").removeClass("fa-plus-circle").addClass("fa-minus-circle");
+			athlete.find(".moreOverlay").addClass("hidden");
+			athlete.addClass("expanded");
+
 		} else if (direction === "collapse") {
-			target.find(".moreOverlay").removeClass("hidden");
-			target.removeClass("expanded");
+
+			// swap +/- circle, display the read more button, then collapse by
+			// removing the expanded class
+			athlete.find(".expander").removeClass("fa-minus-circle").addClass("fa-plus-circle");
+			athlete.find(".moreOverlay").removeClass("hidden");
+			athlete.removeClass("expanded");
 		}
+	}
+
+
+	/////////////////////////////////////////////
+	///// CHECKING EXPANDED ATHLETE POSITION ////
+	/////////////////////////////////////////////
+
+	// the checkPosition function is passed the athlete div that has changed
+	// position. if it falls within 100 pixels of the bottom of the window
+	// or above the top of the window, the window scrolls to that athlete's position
+
+	function checkPosition(athlete) {
+
+		// grabs the height and scrolltop of the window, and the offset position
+		// of the athlete that has changed layout
+		var windowHeight = $(window).height();
+		var top = $(window).scrollTop();
+		var y = athlete.offset().top;
+
+		// if that athlete falls within 100 pixels of the bottom of the window
+		// or above the top, the window scrolls the athlete into view
+		if (y > top + (windowHeight - 100) || y < top) {
+			$("html, body").animate({
+				scrollTop: y - 100
+			}, 500);
+		}
+	}
+
+
+
+	/////////////////////////////////////////////
+	///// INITIALIZING ISOTOPE //////////////////
+	/////////////////////////////////////////////
+
+	var $grid;
+
+	function runIsotope() {
+
+		// setting up the isotope grid. for more info, see: http://isotope.metafizzy.co/
+		$grid = $("#olympians").isotope({
+			layoutMode: 'packery',
+			itemSelector: '.athlete',
+			precentPosition: true,
+			transitionDuration: 500
+		});
+
+		// test code to test the sorting function of isotope, will expand later
+		var sport = "basketball";
+		sport = "." + "basketball";
+		$("#testButton").click(function() {
+			console.log("test");
+			$grid.isotope({
+				filter: sport
+			});
+		});
 
 	}
+
 
 
 });
