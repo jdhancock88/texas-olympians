@@ -114,9 +114,12 @@
     text-align: left;
     border-bottom: 1px solid #797979; }
   .schedule th {
-    font-weight: bold; }
+    font-weight: bold;
+    text-transform: uppercase; }
   .schedule th, .schedule td {
-    padding: 3px 5px 3px 0; }
+    padding: 5px 5px 5px 0; }
+  .schedule td {
+    font-size: 1.2rem; }
 
 .links {
   font-size: 1.3rem;
@@ -207,3 +210,21 @@
 
 .hidden {
   display: none; }
+
+.medal {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  margin: 0px 5px 0 0;
+  position: relative;
+  top: 1px; }
+
+.goldMedal {
+  background-color: #edc76f; }
+
+.silverMedal {
+  background-color: #c0c0c0; }
+
+.bronzeMedal {
+  background-color: #cd7f32; }

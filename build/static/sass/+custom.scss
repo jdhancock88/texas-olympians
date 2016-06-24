@@ -134,9 +134,13 @@
     }
     th {
         font-weight: bold;
+        text-transform: uppercase;
     }
     th, td {
-        padding: 3px 5px 3px 0;
+        padding: 5px 5px 5px 0;
+    }
+    td {
+        font-size: 1.2rem;
     }
 }
 
@@ -239,4 +243,24 @@
 
 .hidden {
     display: none;
+}
+
+.medal {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    margin: 0px 5px 0 0;
+    position: relative;
+    top: 1px;
+}
+
+.goldMedal {
+    background-color: $gold;
+}
+.silverMedal {
+    background-color: $silver;
+}
+.bronzeMedal {
+    background-color: $bronze;
 }

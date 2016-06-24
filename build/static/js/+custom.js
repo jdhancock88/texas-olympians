@@ -5,8 +5,8 @@ $(document).ready(function() {
 	// injecting current year into footer
 	// DO NOT DELETE
 
-	var d = new Date();
-	var year = d.getFullYear();
+	var currentDate = new Date();
+	var year = currentDate.getFullYear();
 
 	$('.copyright').text(year);
 
@@ -22,6 +22,9 @@ $(document).ready(function() {
 
 	// date formater turns the date object into the correct Mon. Day, Year format
 	var dateFormat = d3.time.format("%b. %d, %Y");
+
+
+
 
 	/////////////////////////////////////////////
 	///// GETTING THE DATA //////////////////////
@@ -44,6 +47,9 @@ $(document).ready(function() {
 			setupData(athletes, sked);
 		}
 	});
+
+
+
 
 	/////////////////////////////////////////////
 	///// SETTING UP OUR DATA FOR ALL ATHLETES //
@@ -69,9 +75,14 @@ $(document).ready(function() {
 				nextDate = dateParser.parse(nextDate);
 				nextDate = dateFormat(nextDate);
 
+				// create a string to get a valid date and time to be parsed into an accurate js date
+				dateTime = nextDate + ", " + this.nexttime;
+				jsDate = Date.parse(dateTime);
+
 				// add each event into our events key
 				if (athlete.name === this.athlete) {
 					var event = {
+						"jsdate": jsDate,
 						"event": this.event,
 						"next_date": nextDate,
 						"next_time": this.nexttime,
@@ -81,20 +92,83 @@ $(document).ready(function() {
 						"silver": this.silver,
 						"bronze": this.bronze,
 					};
+
+					// push each event to the events array on each athlete
 					athlete.events.push(event);
+
+					// sorts the individual events on each athlete by next event date and time
+					athlete.events.sort(function(a, b) {
+						var keyA = new Date(a.jsdate),
+							keyB = new Date(b.jsdate);
+
+						if (keyA < keyB) return -1;
+						if (keyA > keyB) return 1;
+						return 0;
+					});
+
+					// setting a variable that will be where we splice the events
+					// array when we check to see if the events have finished
+					var spliceSpot;
+
+					// iterate over each event, and find the last event to already
+					// have occurred
+					for (i=0; i<athlete.events.length; i++) {
+						if (athlete.events[i].jsdate < currentDate){
+							spliceSpot = i;
+						}
+					}
+
+					// create an array of events that are finished and have no upcoming times
+					var completedEvents = athlete.events.splice(0, (spliceSpot + 1));
+
+					// merge the events back together in one array
+					// with the completed events at the end
+					athlete.events = athlete.events.concat(completedEvents);
+
 				}
 			});
 
 		});
 
+		// sorts the athletes by their next event date and time
+		athletes.sort(function(a, b) {
+			var keyA = new Date(a.events[0].jsdate),
+				keyB = new Date(b.events[0].jsdate);
+			if (keyA < keyB) return -1;
+			if (keyA > keyB) return 1;
+			return 0;
+		});
+
+		// same as above, we're going to run through all the athletes and
+		// move the ones who are finished competiting to the end of the list
+		var spliceSpot;
+
+		// find the last athlete to have already finished competiting
+		for (i=0; i<athletes.length; i++) {
+			if (athletes[i].events[0].jsdate < currentDate){
+				spliceSpot = i;
+			}
+		}
+
+		// create an array of finished athletes, then add it back into the
+		// master athletes array at the end
+		var finished = athletes.splice(0, (spliceSpot+1));
+		athletes = athletes.concat(finished);
+
 		// pass the data off to our olympian drawing function
 		buildOlympians(athletes);
+
+		buildFilters();
 	}
 
 
 	/////////////////////////////////////////////
 	///// BUILDING OUT THE PAGE /////////////////
 	/////////////////////////////////////////////
+
+	// below, we're using d3 to build out our divs for each athletes
+	// as with most things in d3, it's magical. mostly just creating
+	// html elements based off the data for each athlete
 
 	function buildOlympians(athletes) {
 
@@ -215,19 +289,22 @@ $(document).ready(function() {
 						}
 					}
 
-					console.log(gold, silver, bronze);
-
 					if (i === -1) {
 						content +=  "<tr><th>Event</th><th>Time/Date</th><th>Ch.</th><th>Round/Result</th></tr>";
 					} else {
-						content += "<tr><td>" + d.events[i].event + "</td><td>" + d.events[i].next_time +", " + d.events[i].next_date + "</td><td>" + d.events[i].channel + "</td>";
+
+						if (d.events[i].jsdate > currentDate) {
+							content += "<tr><td>" + d.events[i].event + "</td><td>" + d.events[i].next_time +", " + d.events[i].next_date + "</td><td>" + d.events[i].channel + "</td>";
+						} else {
+							content += "<tr><td>" + d.events[i].event + "</td><td>Completed</td><td></td>";
+						}
 
 						if (gold === true) {
-							content += "<td><span class'medal goldMedal'</td></tr>";
+							content += "<td><span class='medal goldMedal'></span>Gold</td></tr>";
 						} else if (silver === true) {
-							content += "<td><span class'medal silverMedal'</td></tr>";
+							content += "<td><span class='medal silverMedal'></span>Silver</td></tr>";
 						} else if (bronze === true) {
-							content += "<td><span class'medal bronzeMedal'</td></tr>";
+							content += "<td><span class='medal bronzeMedal'></span>Bronze</td></tr>";
 						} else {
 							content += "<td>" + d.events[i].roundresult +  "</td></tr>";
 						}
@@ -394,5 +471,62 @@ $(document).ready(function() {
 	}
 
 
+	/////////////////////////////////////////////
+	///// CREATING DROPDOWNS ////////////////////
+	/////////////////////////////////////////////
+
+	var sports = [];
+
+	var sportSelection = "athlete";
+	var medalSelection = "athlete";
+
+	function buildFilters() {
+
+		for (i = 0; i < athletes.length; i++) {
+			console.log(athletes[i].sport);
+			if ($.inArray(athletes[i].sport, sports) === -1) {
+				sports.push(athletes[i].sport);
+			}
+		}
+
+		console.log(sports);
+
+		for (i = 0; i < sports.length; i++) {
+			var option = "<option data-selection='" + sports[i].toLowerCase() + "'>" + sports[i] + "</option>";
+			$("#sports").append(option);
+		}
+	}
+
+	/////////////////////////////////////////////
+	///// FILTERING AHTLETES ////////////////////
+	/////////////////////////////////////////////
+
+
+	$("#sports").change(function() {
+		sportsSelection = ($(this).find("option:selected").attr("data-selection"));
+		if (sportsSelection === "all sports") {
+			sportsSelection = "athlete";
+		}
+		filterAthletes(sportsSelection, medalSelection);
+	});
+
+	// $("#medals").change(function() {
+	// 	medalSelection = ($(this).find("option:selected").attr("data-selection"));
+	// 	if (medalSelection === "all athletes") {
+	// 		medalSelection = "athlete";
+	// 	} else if (medalSelection === "any")
+	// 	filterAthletes(sportsSelection, medalSelection);
+	// });
+
+
+	function filterAthletes(sport, medal) {
+
+		filterString = "."+sport+"."+medal;
+		console.log(filterString);
+		$grid.isotope({
+			filter: filterString
+		});
+
+	}
 
 });
