@@ -181,19 +181,56 @@ googletag.enableServices();
 
 	<p class="intro"><span class="dropcap">A</span>n opening paragraph goes here. orem ipsum dolor sit amet, consectetur adipiscing elit. Nunc fermentum tortor a eleifend sagittis. Quisque laoreet elit vitae turpis aliquet tincidunt. Nulla molestie vitae purus eget dignissim. Quisque blandit nibh lorem, non mollis velit rutrum ac. Pellentesque pharetra mattis luctus.</p>
 
+    <section id="scheduleDisplay">
+        <h4>Texans competing today</h4>
+
+        <div id="nextThree" class="clearFix">
+            <!-- <div class="upNext clearFix">
+                <img src="images/_defaultAthlete.jpg" alt="Default athelte" class="nextAthlete"  />
+                <h5>Michelle Carter</h5>
+                <p><span class="nextEvent">Shotput</span>, <span class="nextRound">Quarterfinals</span></p>
+                <p><span class="nextTime">3 p.m.</span> today, <span class="nextChannel">NBC</span></p>
+            </div>
+            <div class="upNext clearFix">
+                <img src="images/_defaultAthlete.jpg" alt="Default athelte" class="nextAthlete"  />
+                <h5>Michelle Carter</h5>
+                <p><span class="nextEvent">Shotput</span>, <span class="nextRound">Quarterfinals</span></p>
+                <p><span class="nextTime">3 p.m.</span> today, <span class="nextChannel">NBC</span></p>
+            </div>
+            <div class="upNext clearFix">
+                <img src="images/_defaultAthlete.jpg" alt="Default athelte" class="nextAthlete"  />
+                <h5>Michelle Carter</h5>
+                <p><span class="nextEvent">Shotput</span>, <span class="nextRound">Quarterfinals</span></p>
+                <p><span class="nextTime">3 p.m.</span> today, <span class="nextChannel">NBC</span></p>
+            </div> -->
+        </div>
+
+        <p id="todaysOthers"><strong>Others: </strong></p>
+
+        <!-- <div id="todaysSchedule">
+            <h6>Michelle Carter</h6>
+            <p>Shotput, 4 p.m., NBC</p>
+            <h6>Stephen Lambdin</h6>
+            <p>Taekwondo, 6 p.m, MSNBC</p>
+            <p id="noTexans">No Texans competing today</p>
+        </div> -->
+
+    </section>
+
+
     <select id="sports">
-        <option data-selection="all sports">All sports</option>
+        <option data-selection="athlete">All sports</option>
     </select>
 
     <select id="medals">
-        <option data-selection="all athletes">All athletes</option>
-        <option data-selection="any">Any medal</option>
-        <option data-selection="gold">Gold winner</option>
-        <option data-selection="silver">Silver winner</option>
-        <option data-selection="bronze">Bronze winner</option>
+        <option data-selection="athlete">All athletes</option>
+        <option data-selection="medalWinner">Any medal</option>
+        <option data-selection="goldWinner">Gold winner</option>
+        <option data-selection="silverWinner">Silver winner</option>
+        <option data-selection="bronzeWinner">Bronze winner</option>
     </select>
 
-    <div id="olympians">
+    <section id="olympians">
 
 
         <!-- <div class="athlete" data-name="Michelle Carter">
@@ -251,7 +288,7 @@ googletag.enableServices();
             </div>
 
         </div> -->
-    </div>
+    </section>
 
     </section>
 

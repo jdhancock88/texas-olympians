@@ -19,10 +19,13 @@ $(document).ready(function() {
 
 	// date parser to parse the string into a date object
 	var dateParser = d3.time.format("%Y-%m-%d");
+	var currentDateParser = d3.time.format("%b %d %Y");
 
 	// date formater turns the date object into the correct Mon. Day, Year format
 	var dateFormat = d3.time.format("%b. %d, %Y");
 
+	var todaysThree = [];
+	var todaysOthers = [];
 
 
 
@@ -101,8 +104,8 @@ $(document).ready(function() {
 						var keyA = new Date(a.jsdate),
 							keyB = new Date(b.jsdate);
 
-						if (keyA < keyB) return -1;
-						if (keyA > keyB) return 1;
+						if (keyA < keyB) {return -1;}
+						if (keyA > keyB) {return 1;}
 						return 0;
 					});
 
@@ -134,10 +137,36 @@ $(document).ready(function() {
 		athletes.sort(function(a, b) {
 			var keyA = new Date(a.events[0].jsdate),
 				keyB = new Date(b.events[0].jsdate);
-			if (keyA < keyB) return -1;
-			if (keyA > keyB) return 1;
+			if (keyA < keyB) {return -1;}
+			if (keyA > keyB) {return 1;}
 			return 0;
 		});
+
+
+
+		var targetDate = currentDate.toString().substring(4, 15);
+		targetDate = currentDateParser.parse(targetDate);
+		targetDate = dateFormat(targetDate);
+
+		for (i = 0; i < athletes.length; i++) {
+			for (k = 0; k < athletes[i].events.length; k++) {
+				if (athletes[i].events[k].next_date === targetDate) {
+					todaysThree.push(athletes[i]);
+				}
+			}
+		}
+
+		if (todaysThree.length > 3) {
+			todaysOthers = todaysThree.splice(3, (todaysThree.length - 3));
+		}
+
+		console.log(todaysOthers);
+
+		buildTodaysThree(todaysThree, targetDate);
+		buildTodaysOthers(todaysOthers, targetDate);
+
+
+
 
 		// same as above, we're going to run through all the athletes and
 		// move the ones who are finished competiting to the end of the list
@@ -155,15 +184,111 @@ $(document).ready(function() {
 		var finished = athletes.splice(0, (spliceSpot+1));
 		athletes = athletes.concat(finished);
 
+
+
 		// pass the data off to our olympian drawing function
 		buildOlympians(athletes);
 
 		buildFilters();
 	}
 
+	/////////////////////////////////////////////
+	///// BUILDING OUT TODAY'S ATHLETES /////////
+	/////////////////////////////////////////////
+
+
+	function buildTodaysThree(data, targetDate) {
+		if (data.length > 0) {
+			var todaysThree = d3.select("#nextThree").selectAll(".upNext")
+				.data(data);
+
+			todaysThree.enter().append("div")
+				.attr("class", "upNext clearFix")
+				.append("img")
+				.attr("src", function(d) {
+					var name = d.name.toLowerCase();
+					name = name.replace(/ /g, "");
+					return "images/_" + name + "Mug.jpg";
+				})
+				.attr("alt", function(d) {
+					return d.name;
+				})
+				.attr("class", "nextAthlete");
+
+			todaysThree.append("h5")
+				.text(function(d) {
+					return d.name;
+				});
+
+			todaysThree.append("h6")
+				.text(function(d) {
+					var content;
+					for (i=0; i < d.events.length; i++) {
+						if (d.events[i].next_date === targetDate) {
+							content = d.events[i].event;
+						}
+					}
+					return content;
+				});
+
+			todaysThree.append("p")
+				.text(function(d) {
+					var content;
+					for (i=0; i < d.events.length; i++) {
+						if (d.events[i].next_date == targetDate) {
+							content = d.events[i].next_time + " today, " + d.events[i].channel;
+						}
+					}
+					return content;
+				});
+		} else {
+			$("#scheduleDisplay").remove();
+		}
+	}
 
 	/////////////////////////////////////////////
-	///// BUILDING OUT THE PAGE /////////////////
+	///// BUILDING OUT TODAY'S OTHERS ///////////
+	/////////////////////////////////////////////
+
+	function buildTodaysOthers(data, targetDate) {
+
+		if (data.length > 0) {
+
+			var todaysOthers = d3.select("#todaysOthers").selectAll(".otherAth")
+			.data(data);
+
+			todaysOthers.enter().append("div")
+				.attr("class", "otherAth")
+				.append("img")
+				.attr("src", function(d) {
+					var name = d.name.toLowerCase();
+					name = name.replace(/ /g, "");
+					return "images/_" + name + "Mug.jpg";
+				})
+				.attr("alt", function(d) {
+					return d.name;
+				});
+
+			todaysOthers.append("span")
+				.attr("class", "other")
+				.html(function(d) {
+					var content = "";
+					for (i = 0; i < d.events.length; i++) {
+						if (d.events[i].next_date === targetDate) {
+							content += d.name + ", " + d.events[i].event + ", " + d.events[i].next_time + ", " + d.events[i].channel;
+						}
+					}
+					return content;
+				});
+
+
+		} else {
+			$("#todaysOthers").remove();
+		}
+	}
+
+	/////////////////////////////////////////////
+	///// BUILDING OUT THE ATHLETE BLOCKS ///////
 	/////////////////////////////////////////////
 
 	// below, we're using d3 to build out our divs for each athletes
@@ -180,7 +305,20 @@ $(document).ready(function() {
 		athDivs.enter().append("div")
 			.attr("class", function(d) {
 				var sport = d.sport.toLowerCase();
-				return "athlete " + sport;
+				if (d.bronze > 0 || d.silver > 0 || d.gold > 0) {
+					return "athlete medalWinner " + sport;
+				} else {
+					return "athlete " + sport;
+				}
+			})
+			.classed("bronzeWinner", function(d) {
+				if (d.bronze > 0) {return true;}
+			})
+			.classed("silverWinner", function(d) {
+				if (d.silver > 0) {return true;}
+			})
+			.classed("goldWinner", function(d) {
+				if (d.gold > 0) {return true;}
 			})
 			.attr("data-athlete", function(d) {
 				return d.name;
@@ -318,7 +456,7 @@ $(document).ready(function() {
 		var athLinks = athContent.append("ul")
 			.attr("class", "links")
 			.html(function(d) {
-				var content = "";
+				var content = "<p class='label'>Related content</p>";
 
 				if (d.link1text !== undefined) {
 					content += "<li><a target='_blank' href='" + d.link1url + "'>" + d.link1text + "</a></li>";
@@ -503,10 +641,12 @@ $(document).ready(function() {
 
 
 	$("#sports").change(function() {
-		sportsSelection = ($(this).find("option:selected").attr("data-selection"));
-		if (sportsSelection === "all sports") {
-			sportsSelection = "athlete";
-		}
+		sportsSelection = $(this).find("option:selected").attr("data-selection");
+		filterAthletes(sportsSelection, medalSelection);
+	});
+
+	$("#medals").change(function() {
+		medalSelection = $(this).find("option:selected").attr("data-selection");
 		filterAthletes(sportsSelection, medalSelection);
 	});
 

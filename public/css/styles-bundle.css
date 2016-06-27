@@ -874,6 +874,60 @@ XX. ADS
   font-weight: bold;
   margin-bottom: .5rem !important; }
 
+#scheduleDisplay {
+  width: 100%;
+  margin-bottom: 4.8rem;
+  padding-bottom: 4.8rem;
+  border-bottom: 1px solid #797979;
+  font-family: "Open Sans", Arial, sans-serif; }
+  #scheduleDisplay h4 {
+    font-family: Oswald, Arial, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 2.4rem; }
+
+.upNext {
+  width: 32%;
+  float: left;
+  margin: 0 2% 1.2rem 0;
+  border-right: 1px solid #ebebeb; }
+  .upNext:last-of-type {
+    margin-right: 0;
+    border-right: none; }
+  .upNext h5, .upNext h6 {
+    font-family: Oswald, Arial, sans-serif;
+    font-weight: bold; }
+  .upNext img {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    float: left; }
+  .upNext h5, .upNext h6, .upNext p {
+    width: calc(100% - 85px);
+    float: right; }
+  .upNext p {
+    font-size: 1.3rem;
+    line-height: 1.8rem;
+    margin-bottom: 0; }
+
+#todaysOthers {
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid #ebebeb;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  margin-bottom: 0; }
+
+.otherAth {
+  display: inline; }
+  .otherAth:after {
+    content: "; "; }
+  .otherAth:last-of-type:after {
+    content: ""; }
+
+.otherAth img {
+  display: none; }
+
 .grid-sizer {
   width: 23.5%; }
 
@@ -989,6 +1043,8 @@ XX. ADS
   .schedule tr {
     text-align: left;
     border-bottom: 1px solid #797979; }
+    .schedule tr:last-of-type {
+      border-bottom: none; }
   .schedule th {
     font-weight: bold;
     text-transform: uppercase; }
@@ -1044,7 +1100,8 @@ XX. ADS
 
 .expanded {
   width: 98%;
-  height: 500px; }
+  height: 500px;
+  margin: 4.8rem 2%; }
   .expanded .links {
     display: block; }
   .expanded .schedule {

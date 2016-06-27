@@ -10,6 +10,71 @@
 @import 'variables';
 @import 'mixins';
 
+#scheduleDisplay {
+    width: 100%;
+    margin-bottom: 4.8rem;
+    padding-bottom: 4.8rem;
+    border-bottom: 1px solid $black121;
+    font-family: $sans;
+    h4 {
+        font-family: $custom;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 2.4rem;
+    }
+}
+.upNext {
+    width: 32%;
+    float: left;
+    margin: 0 2% 1.2rem 0;
+    border-right: 1px solid $black235;
+    &:last-of-type {
+        margin-right: 0;
+        border-right: none;
+    }
+    h5, h6 {
+        font-family: $custom;
+        font-weight: bold;
+    }
+    img {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        float: left;
+    }
+    h5, h6, p {
+        width: calc(100% - 85px);
+        float: right;
+    }
+    p {
+        @include type(1.3rem, 1.8rem, 0);
+    }
+
+}
+
+#todaysOthers {
+    margin-top: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid $black235;
+    @include type(1.2rem, 1.5rem, 0);
+}
+
+.otherAth {
+    display: inline;
+    &:after {
+       content: "; "
+   }
+    &:last-of-type {
+       &:after {
+           content: "";
+       }
+    }
+}
+
+.otherAth img {
+    display: none;
+}
+
 .grid-sizer {
     width: 23.5%;
 }
@@ -131,6 +196,9 @@
     tr {
         text-align: left;
         border-bottom: 1px solid $black121;
+        &:last-of-type {
+            border-bottom: none;
+        }
     }
     th {
         font-weight: bold;
@@ -190,6 +258,7 @@
 .expanded {
     width: 98%;
     height: 500px;
+    margin: 4.8rem 2%;
     .links {
         display: block;
     }
