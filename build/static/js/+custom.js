@@ -24,8 +24,7 @@ $(document).ready(function() {
 	// date formater turns the date object into the correct Mon. Day, Year format
 	var dateFormat = d3.time.format("%b. %d, %Y");
 
-	var todaysThree = [];
-	var todaysOthers = [];
+	var todaysAths = [];
 
 
 
@@ -94,6 +93,7 @@ $(document).ready(function() {
 						"gold": this.gold,
 						"silver": this.silver,
 						"bronze": this.bronze,
+						"completed": this.completed
 					};
 
 					// push each event to the events array on each athlete
@@ -143,29 +143,25 @@ $(document).ready(function() {
 		});
 
 
-
+		// getting the current date in the the same format as the next_date value on
+		// our athlete objects
 		var targetDate = currentDate.toString().substring(4, 15);
 		targetDate = currentDateParser.parse(targetDate);
 		targetDate = dateFormat(targetDate);
 
+		// checking over each of our athletes and populating the todaysAths array
+		// with each of the athletes that match the current date
 		for (i = 0; i < athletes.length; i++) {
 			for (k = 0; k < athletes[i].events.length; k++) {
 				if (athletes[i].events[k].next_date === targetDate) {
-					todaysThree.push(athletes[i]);
+					todaysAths.push(athletes[i]);
 				}
 			}
 		}
 
-		if (todaysThree.length > 3) {
-			todaysOthers = todaysThree.splice(3, (todaysThree.length - 3));
-		}
-
-		console.log(todaysOthers);
-
-		buildTodaysThree(todaysThree, targetDate);
-		buildTodaysOthers(todaysOthers, targetDate);
-
-
+		// passing our todayAths and the targetDate off to the function
+		// that builds out our divs of the athletes competing today
+		buildTodaysAths(todaysAths, targetDate);
 
 
 		// same as above, we're going to run through all the athletes and
@@ -184,11 +180,10 @@ $(document).ready(function() {
 		var finished = athletes.splice(0, (spliceSpot+1));
 		athletes = athletes.concat(finished);
 
-
-
 		// pass the data off to our olympian drawing function
 		buildOlympians(athletes);
 
+		// build the dropdowns
 		buildFilters();
 	}
 
@@ -197,12 +192,12 @@ $(document).ready(function() {
 	/////////////////////////////////////////////
 
 
-	function buildTodaysThree(data, targetDate) {
+	function buildTodaysAths(data, targetDate) {
 		if (data.length > 0) {
-			var todaysThree = d3.select("#nextThree").selectAll(".upNext")
+			var todaysAths = d3.select("#todaysAths").selectAll(".upNext")
 				.data(data);
 
-			todaysThree.enter().append("div")
+			todaysAths.enter().append("div")
 				.attr("class", "upNext clearFix")
 				.append("img")
 				.attr("src", function(d) {
@@ -215,12 +210,12 @@ $(document).ready(function() {
 				})
 				.attr("class", "nextAthlete");
 
-			todaysThree.append("h5")
+			todaysAths.append("h6")
 				.text(function(d) {
 					return d.name;
 				});
 
-			todaysThree.append("h6")
+			todaysAths.append("p")
 				.text(function(d) {
 					var content;
 					for (i=0; i < d.events.length; i++) {
@@ -231,12 +226,12 @@ $(document).ready(function() {
 					return content;
 				});
 
-			todaysThree.append("p")
+			todaysAths.append("p")
 				.text(function(d) {
 					var content;
 					for (i=0; i < d.events.length; i++) {
 						if (d.events[i].next_date == targetDate) {
-							content = d.events[i].next_time + " today, " + d.events[i].channel;
+							content = d.events[i].next_time + ", " + d.events[i].channel;
 						}
 					}
 					return content;
@@ -244,48 +239,35 @@ $(document).ready(function() {
 		} else {
 			$("#scheduleDisplay").remove();
 		}
+
+		// ENDS D3 ATHLETE DIV SETUP AND BEGINS ASSIGNING FUNCTIONS
+
+		// assigning click funtion that expands and displays an athlete when
+		// their name is clicked on from the schedule of today's athletes
+
+		$(".upNext h6").click(function() {
+
+			var athlete;
+
+			//grabbing the name of the athlete
+			var target = $(this).text();
+
+			// find the corresponding athlete div that matches the target name
+			$.each($(".athlete"), function() {
+				if ( $(this).attr("data-athlete") === target) {
+					athlete = $(this);
+				}
+			});
+
+			// pass that div off to the checkExpansion function, which will
+			// check if it's expanded currently and show it, then reposition
+			// the window to accomodate any movement
+			checkExpansion(athlete);
+		});
+
+
 	}
 
-	/////////////////////////////////////////////
-	///// BUILDING OUT TODAY'S OTHERS ///////////
-	/////////////////////////////////////////////
-
-	function buildTodaysOthers(data, targetDate) {
-
-		if (data.length > 0) {
-
-			var todaysOthers = d3.select("#todaysOthers").selectAll(".otherAth")
-			.data(data);
-
-			todaysOthers.enter().append("div")
-				.attr("class", "otherAth")
-				.append("img")
-				.attr("src", function(d) {
-					var name = d.name.toLowerCase();
-					name = name.replace(/ /g, "");
-					return "images/_" + name + "Mug.jpg";
-				})
-				.attr("alt", function(d) {
-					return d.name;
-				});
-
-			todaysOthers.append("span")
-				.attr("class", "other")
-				.html(function(d) {
-					var content = "";
-					for (i = 0; i < d.events.length; i++) {
-						if (d.events[i].next_date === targetDate) {
-							content += d.name + ", " + d.events[i].event + ", " + d.events[i].next_time + ", " + d.events[i].channel;
-						}
-					}
-					return content;
-				});
-
-
-		} else {
-			$("#todaysOthers").remove();
-		}
-	}
 
 	/////////////////////////////////////////////
 	///// BUILDING OUT THE ATHLETE BLOCKS ///////
@@ -296,8 +278,6 @@ $(document).ready(function() {
 	// html elements based off the data for each athlete
 
 	function buildOlympians(athletes) {
-
-		console.log(athletes);
 
 		var athDivs = d3.select("#olympians").selectAll(".athlete")
 			.data(athletes);
@@ -370,7 +350,15 @@ $(document).ready(function() {
 			.attr("class", "flag");
 
 		athName.append("h4")
-			.html(function(d){return d.name + " <span class='country'>  | " + d.nation + "</span>" ;});
+			.html(function(d){
+				return d.name;
+			});
+
+		athName.append("h5")
+			.attr("class", "country")
+			.text(function(d) {
+				return d.nation;
+			});
 
 		var athBio = athContent.append("div")
 			.attr("class", "bio");
@@ -403,13 +391,18 @@ $(document).ready(function() {
 			.attr("class", "blurb")
 			.html(function(d){return d.bio;});
 
-		var athTable = athContent.append("table")
+		var athTable = athContent.append("div")
+			.attr("class", "schedule");
+
+			athTable.append("p")
+				.attr("class", "label")
+				.text("Schedule and Results");
+
+			athTable.append("table")
 			.attr("class", "schedule")
 			.html(function(d) {
 
 				var content = "";
-
-				content += "<p class='label'>Schedule and Results</p>";
 
 				for (i= -1; i < d.events.length; i++) {
 					var gold = false,
@@ -428,13 +421,14 @@ $(document).ready(function() {
 					}
 
 					if (i === -1) {
-						content +=  "<tr><th>Event</th><th>Time/Date</th><th>Ch.</th><th>Round/Result</th></tr>";
+						content +=  "<tr><th>Event</th><th>Time/Date</th><th>Ch.</th><th>Rd./Pl.</th></tr>";
+
 					} else {
 
-						if (d.events[i].jsdate > currentDate) {
+						if (d.events[i].completed !== "yes") {
 							content += "<tr><td>" + d.events[i].event + "</td><td>" + d.events[i].next_time +", " + d.events[i].next_date + "</td><td>" + d.events[i].channel + "</td>";
 						} else {
-							content += "<tr><td>" + d.events[i].event + "</td><td>Completed</td><td></td>";
+							content += "<tr><td>" + d.events[i].event + "</td><td>Completed</td><td>" + d.events[i].channel + "</td>";
 						}
 
 						if (gold === true) {
@@ -488,31 +482,37 @@ $(document).ready(function() {
 		// the readmore or +/- button is clicked
 
 		$(".readMore, .expander").click(function() {
-			// if the athlete clicked isn't already open ...
-			if ($(this).closest(".athlete").hasClass("expanded") === false) {
-				expand($(this), "expand"); //open the athlete clicked
-				$grid.isotope("layout"); //rerun the isotope layout
-			}
-			// if the athlete is open ...
-			else {
-				expand($(this), "collapse"); // collapse that athlete
-				$grid.isotope("layout"); // rerun the isotope layout
-			}
-
-			// assign the athlete we're clicking on to the movedAthlete variable
-			var movedAthlete = $(this).closest(".athlete");
-
-			// after the animation has finished running, run the checkPosition function
-			setTimeout(function() {
-				checkPosition(movedAthlete);
-			}, 525);
-
+			var athlete = $(this).closest(".athlete");
+			checkExpansion(athlete);
 		});
 
 		// initializes isotope
 		runIsotope();
 	}
 
+	/////////////////////////////////////////////
+	///// CHECKING EXPANSION OR COLLAPSE ////////
+	/////////////////////////////////////////////
+
+	function checkExpansion(elem) {
+		if (elem.hasClass("expanded") === false) {
+			expand(elem, "expand"); //open the athlete clicked
+			$grid.isotope("layout"); //rerun the isotope layout
+		}
+		// if the athlete is open ...
+		else {
+			expand(elem, "collapse"); // collapse that athlete
+			$grid.isotope("layout"); // rerun the isotope layout
+		}
+
+		// assign the athlete we're clicking on to the movedAthlete variable
+		var movedAthlete = elem;
+
+		// after the animation has finished running, run the checkPosition function
+		setTimeout(function() {
+			checkPosition(movedAthlete);
+		}, 525);
+	}
 
 
 	/////////////////////////////////////////////
@@ -522,10 +522,7 @@ $(document).ready(function() {
 	// the expand function is passed two parameters, the object we clicked on,
 	// and the direction ("expand" or "collapse")
 
-	function expand(thisObj, direction) {
-
-		// assigning the athlete variable to the athlete div
-		var athlete = thisObj.closest(".athlete");
+	function expand(athlete, direction) {
 
 		// let's see what we're doing: expanding or collapsing?
 		if (direction === "expand") {
@@ -600,7 +597,6 @@ $(document).ready(function() {
 		var sport = "basketball";
 		sport = "." + "basketball";
 		$("#testButton").click(function() {
-			console.log("test");
 			$grid.isotope({
 				filter: sport
 			});
@@ -621,13 +617,10 @@ $(document).ready(function() {
 	function buildFilters() {
 
 		for (i = 0; i < athletes.length; i++) {
-			console.log(athletes[i].sport);
 			if ($.inArray(athletes[i].sport, sports) === -1) {
 				sports.push(athletes[i].sport);
 			}
 		}
-
-		console.log(sports);
 
 		for (i = 0; i < sports.length; i++) {
 			var option = "<option data-selection='" + sports[i].toLowerCase() + "'>" + sports[i] + "</option>";
@@ -662,7 +655,6 @@ $(document).ready(function() {
 	function filterAthletes(sport, medal) {
 
 		filterString = "."+sport+"."+medal;
-		console.log(filterString);
 		$grid.isotope({
 			filter: filterString
 		});

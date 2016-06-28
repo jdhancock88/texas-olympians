@@ -183,8 +183,9 @@ googletag.enableServices();
 
     <section id="scheduleDisplay">
         <h4>Texans competing today</h4>
+        <p class="chatter">Click on an athlete’s name to view their card with schedule, results and related content: </p>
 
-        <div id="nextThree" class="clearFix">
+        <div id="todaysAths" class="clearFix">
             <!-- <div class="upNext clearFix">
                 <img src="images/_defaultAthlete.jpg" alt="Default athelte" class="nextAthlete"  />
                 <h5>Michelle Carter</h5>
@@ -205,7 +206,6 @@ googletag.enableServices();
             </div> -->
         </div>
 
-        <p id="todaysOthers"><strong>Others: </strong></p>
 
         <!-- <div id="todaysSchedule">
             <h6>Michelle Carter</h6>
@@ -218,17 +218,20 @@ googletag.enableServices();
     </section>
 
 
-    <select id="sports">
-        <option data-selection="athlete">All sports</option>
-    </select>
+    <div id="filters">
 
-    <select id="medals">
-        <option data-selection="athlete">All athletes</option>
-        <option data-selection="medalWinner">Any medal</option>
-        <option data-selection="goldWinner">Gold winner</option>
-        <option data-selection="silverWinner">Silver winner</option>
-        <option data-selection="bronzeWinner">Bronze winner</option>
-    </select>
+        <select id="sports">
+            <option data-selection="athlete">All sports</option>
+        </select>
+
+        <select id="medals">
+            <option data-selection="athlete">All athletes</option>
+            <option data-selection="medalWinner">Any medal</option>
+            <option data-selection="goldWinner">Gold winner</option>
+            <option data-selection="silverWinner">Silver winner</option>
+            <option data-selection="bronzeWinner">Bronze winner</option>
+        </select>
+    </div>
 
     <section id="olympians">
 

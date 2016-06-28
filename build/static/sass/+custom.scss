@@ -12,67 +12,66 @@
 
 #scheduleDisplay {
     width: 100%;
-    margin-bottom: 4.8rem;
-    padding-bottom: 4.8rem;
-    border-bottom: 1px solid $black121;
     font-family: $sans;
+    overflow: hidden;
     h4 {
         font-family: $custom;
         font-weight: bold;
         text-transform: uppercase;
-        margin-bottom: 2.4rem;
+        margin-bottom: .6rem;
+        padding-left: 2%;
     }
 }
+.chatter {
+    @include type(1.3rem, 1.8rem, 2.4rem);
+    padding-left: 2%;
+}
 .upNext {
-    width: 32%;
+    width: 20%;
+    padding: 0 2%;
     float: left;
-    margin: 0 2% 1.2rem 0;
-    border-right: 1px solid $black235;
-    &:last-of-type {
-        margin-right: 0;
+    margin-bottom: 1.2rem;;
+    border-right: 1px solid $black121;
+    margin-bottom: -1000px;
+    padding-bottom: 1000px;
+    &:nth-child(5n+5) {
         border-right: none;
     }
-    h5, h6 {
+    &:last-of-type {
+        border-right: none;
+    }
+    h6 {
         font-family: $custom;
         font-weight: bold;
+        cursor: pointer;
+        &:hover {
+            text-decoration: underline;
+        }
     }
     img {
-        width: 75px;
-        height: 75px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         float: left;
     }
-    h5, h6, p {
-        width: calc(100% - 85px);
+    h6, p {
+        width: calc(100% - 60px);
         float: right;
     }
     p {
-        @include type(1.3rem, 1.8rem, 0);
+        @include type(1.2rem, 1.5rem, 0);
     }
 
 }
 
-#todaysOthers {
-    margin-top: 1.2rem;
-    padding-top: 1.2rem;
-    border-top: 1px solid $black235;
-    @include type(1.2rem, 1.5rem, 0);
-}
-
-.otherAth {
-    display: inline;
-    &:after {
-       content: "; "
-   }
-    &:last-of-type {
-       &:after {
-           content: "";
-       }
+#filters {
+    margin-top: 2.4rem;
+    padding: 2.4rem 0 0 1%;
+    border-top: 1px solid $black121;
+    select {
+        margin: 0 1.2rem 2.4rem 0;
+        font-size: 1.6rem;
     }
-}
-
-.otherAth img {
-    display: none;
 }
 
 .grid-sizer {
@@ -168,6 +167,8 @@
 .country {
     display: none;
     font-weight: normal;
+    font-family: $custom;
+    margin: 0 0 2.4rem 25px;
 }
 
 .info {
@@ -202,7 +203,6 @@
     }
     th {
         font-weight: bold;
-        text-transform: uppercase;
     }
     th, td {
         padding: 5px 5px 5px 0;
@@ -216,9 +216,7 @@
     @include type(1.3rem, 1.8rem, 1.3rem);
     font-family: $sans;
 }
-//  .schedule, .links {
-//     display: none;
-// }
+
 
 .moreOverlay {
     position: absolute;
@@ -264,7 +262,10 @@
     }
     .schedule {
         width: 100%;
-        display: table;
+        display: block;
+        table {
+            display: table;
+        }
     }
     .expander {
         top: 20px;
@@ -299,8 +300,10 @@
         width: calc(100% - 500px);
         margin-top: 0;
         height: 500px;
-        overflow-y: auto;
         padding: 20px;
+        h4 {
+            margin-bottom: .3rem;
+        }
         .nameBlock {
             clear: left;
         }

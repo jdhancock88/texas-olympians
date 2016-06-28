@@ -876,57 +876,59 @@ XX. ADS
 
 #scheduleDisplay {
   width: 100%;
-  margin-bottom: 4.8rem;
-  padding-bottom: 4.8rem;
-  border-bottom: 1px solid #797979;
-  font-family: "Open Sans", Arial, sans-serif; }
+  font-family: "Open Sans", Arial, sans-serif;
+  overflow: hidden; }
   #scheduleDisplay h4 {
     font-family: Oswald, Arial, sans-serif;
     font-weight: bold;
     text-transform: uppercase;
-    margin-bottom: 2.4rem; }
+    margin-bottom: .6rem;
+    padding-left: 2%; }
+
+.chatter {
+  font-size: 1.3rem;
+  line-height: 1.8rem;
+  margin-bottom: 2.4rem;
+  padding-left: 2%; }
 
 .upNext {
-  width: 32%;
+  width: 20%;
+  padding: 0 2%;
   float: left;
-  margin: 0 2% 1.2rem 0;
-  border-right: 1px solid #ebebeb; }
-  .upNext:last-of-type {
-    margin-right: 0;
+  margin-bottom: 1.2rem;
+  border-right: 1px solid #797979;
+  margin-bottom: -1000px;
+  padding-bottom: 1000px; }
+  .upNext:nth-child(5n+5) {
     border-right: none; }
-  .upNext h5, .upNext h6 {
+  .upNext:last-of-type {
+    border-right: none; }
+  .upNext h6 {
     font-family: Oswald, Arial, sans-serif;
-    font-weight: bold; }
+    font-weight: bold;
+    cursor: pointer; }
+    .upNext h6:hover {
+      text-decoration: underline; }
   .upNext img {
-    width: 75px;
-    height: 75px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     float: left; }
-  .upNext h5, .upNext h6, .upNext p {
-    width: calc(100% - 85px);
+  .upNext h6, .upNext p {
+    width: calc(100% - 60px);
     float: right; }
   .upNext p {
-    font-size: 1.3rem;
-    line-height: 1.8rem;
+    font-size: 1.2rem;
+    line-height: 1.5rem;
     margin-bottom: 0; }
 
-#todaysOthers {
-  margin-top: 1.2rem;
-  padding-top: 1.2rem;
-  border-top: 1px solid #ebebeb;
-  font-size: 1.2rem;
-  line-height: 1.5rem;
-  margin-bottom: 0; }
-
-.otherAth {
-  display: inline; }
-  .otherAth:after {
-    content: "; "; }
-  .otherAth:last-of-type:after {
-    content: ""; }
-
-.otherAth img {
-  display: none; }
+#filters {
+  margin-top: 2.4rem;
+  padding: 2.4rem 0 0 1%;
+  border-top: 1px solid #797979; }
+  #filters select {
+    margin: 0 1.2rem 2.4rem 0;
+    font-size: 1.6rem; }
 
 .grid-sizer {
   width: 23.5%; }
@@ -1012,7 +1014,9 @@ XX. ADS
 
 .country {
   display: none;
-  font-weight: normal; }
+  font-weight: normal;
+  font-family: Oswald, Arial, sans-serif;
+  margin: 0 0 2.4rem 25px; }
 
 .info {
   display: inline-block;
@@ -1046,8 +1050,7 @@ XX. ADS
     .schedule tr:last-of-type {
       border-bottom: none; }
   .schedule th {
-    font-weight: bold;
-    text-transform: uppercase; }
+    font-weight: bold; }
   .schedule th, .schedule td {
     padding: 5px 5px 5px 0; }
   .schedule td {
@@ -1106,7 +1109,9 @@ XX. ADS
     display: block; }
   .expanded .schedule {
     width: 100%;
-    display: table; }
+    display: block; }
+    .expanded .schedule table {
+      display: table; }
   .expanded .expander {
     top: 20px;
     right: 20px;
@@ -1134,8 +1139,9 @@ XX. ADS
     width: calc(100% - 500px);
     margin-top: 0;
     height: 500px;
-    overflow-y: auto;
     padding: 20px; }
+    .expanded .athContent h4 {
+      margin-bottom: .3rem; }
     .expanded .athContent .nameBlock {
       clear: left; }
   .expanded .blurb {
