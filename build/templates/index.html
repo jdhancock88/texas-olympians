@@ -33,6 +33,7 @@
 
 
 {%block custom_head%}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
 <script src="https://npmcdn.com/isotope-layout@3.0/dist/isotope.pkgd.min.js"></script>
 <script type="text/javascript" src="js/packery.js"></script>
 
@@ -94,11 +95,7 @@ googletag.enableServices();
 
 
 {%block content%}
-<section id="contentHeader">
-	<img src="images/_defaultImage.jpg" alt="#" />
-	<p class="cutline">Cutline goes here. You can remove this tag if you don't feel the lead image needs a cutline</p>
-</section>
-<!-- end contentHeader -->
+
 
 <section class="contentWell clearFix">
 
@@ -160,12 +157,14 @@ googletag.enableServices();
     </section>
 
 
-    <div id="filters">
+    <div id="filters" class="clearFix">
 
+        <h6>View by sport:</h6>
         <select id="sports">
             <option data-selection="athlete">All sports</option>
         </select>
 
+        <h6>View by medal:</h6>
         <select id="medals">
             <option data-selection="athlete">All athletes</option>
             <option data-selection="medalWinner">Any medal</option>

@@ -8,6 +8,10 @@ $(document).ready(function() {
 	var currentDate = new Date();
 	var year = currentDate.getFullYear();
 
+	currentDate = Date.parse(currentDate);
+
+	console.log(Date.parse("today"));
+
 	$('.copyright').text(year);
 
 	// data counter will keep track if all of our data is loaded before we build the page
@@ -31,9 +35,60 @@ $(document).ready(function() {
 	/////////////////////////////////////////////
 	///// GETTING THE DATA //////////////////////
 	/////////////////////////////////////////////
-
 	$.getJSON("http://interactives.dallasnews.com/data-store/2016/062016-texas-olympians-sked.json", function(data) {
 		sked = data;
+
+		_.forEach(sked, function(value, key) {
+			// cut our date down to just YYYY-MM-DD
+			// parse it into a date object
+			// then format it into our MMM. DD, YYYY format
+			var nextDate = value.nextdate.substring(0,10);
+			nextDate = dateParser.parse(nextDate);
+			nextDate = dateFormat(nextDate);
+
+			// create a string to get a valid date and time to be parsed into an accurate js date
+			dateTime = nextDate + ", " + value.nexttime;
+			jsDate = Date.parse(dateTime);
+			value.jsDate = jsDate;
+			value.next_date = nextDate;
+			value.gold = value.gold;
+			value.silver = value.silver;
+			value.bronze = value.bronze;
+
+			// sorts the individual events on each athlete by next event date and time
+			// sked.sort(function(a, b) {
+			// 	var keyA = new Date(a.next_date),
+			// 		keyB = new Date(b.next_date);
+			//
+			// 	if (keyA < keyB) {return 1;}
+			// 	if (keyA > keyB) {return -1;}
+			// 	return 0;
+			// });
+
+
+		});
+
+		sked = _.orderBy(sked, "jsDate", "asc");
+
+		// setting a variable that will be where we splice the events
+		// array when we check to see if the events have finished
+		var spliceSpot;
+
+		// iterate over each event, and find the last event to already
+		// have occurred
+		for (i=0; i<sked.length; i++) {
+			if (sked[i].jsDate < currentDate){
+				spliceSpot = i;
+			}
+		}
+
+		// create an array of events that are finished and have no upcoming times
+		var completedEvents = sked.splice(0, (spliceSpot));
+
+		// merge the events back together in one array
+		// with the completed events at the end
+		sked = sked.concat(completedEvents);
+
 		dataCounter++;
 
 		if (dataCounter === 2) {
@@ -58,90 +113,106 @@ $(document).ready(function() {
 	/////////////////////////////////////////////
 
 
+
 	// for each athlete, we'll cycle through our sked and add each event
 	// to an events key on the athlete object
 
 	function setupData(athletes, sked) {
 
-		$.each(athletes, function(k,v) {
+		console.time("marrying");
+		_.forEach(athletes, function(value, key) {
 
-			var athlete = v;
+			var athlete = value;
 			athlete.events = [];
 
-			$.each(sked, function() {
+			var found = false;
 
-				// cut our date down to just YYYY-MM-DD
-				// parse it into a date object
-				// then format it into our MMM. DD, YYYY format
-				var nextDate = this.nextdate.substring(0,10);
-				nextDate = dateParser.parse(nextDate);
-				nextDate = dateFormat(nextDate);
-
-				// create a string to get a valid date and time to be parsed into an accurate js date
-				dateTime = nextDate + ", " + this.nexttime;
-				jsDate = Date.parse(dateTime);
-
-				// add each event into our events key
-				if (athlete.name === this.athlete) {
-					var event = {
-						"jsdate": jsDate,
-						"event": this.event,
-						"next_date": nextDate,
-						"next_time": this.nexttime,
-						"channel": this.channel,
-						"roundresult": this.roundresult,
-						"gold": this.gold,
-						"silver": this.silver,
-						"bronze": this.bronze,
-						"completed": this.completed
-					};
-
-					// push each event to the events array on each athlete
-					athlete.events.push(event);
-
-					// sorts the individual events on each athlete by next event date and time
-					athlete.events.sort(function(a, b) {
-						var keyA = new Date(a.jsdate),
-							keyB = new Date(b.jsdate);
-
-						if (keyA < keyB) {return -1;}
-						if (keyA > keyB) {return 1;}
-						return 0;
-					});
-
-					// setting a variable that will be where we splice the events
-					// array when we check to see if the events have finished
-					var spliceSpot;
-
-					// iterate over each event, and find the last event to already
-					// have occurred
-					for (i=0; i<athlete.events.length; i++) {
-						if (athlete.events[i].jsdate < currentDate){
-							spliceSpot = i;
-						}
-					}
-
-					// create an array of events that are finished and have no upcoming times
-					var completedEvents = athlete.events.splice(0, (spliceSpot + 1));
-
-					// merge the events back together in one array
-					// with the completed events at the end
-					athlete.events = athlete.events.concat(completedEvents);
-
-				}
+			athlete.events = _.filter(sked, function(e) {
+				return e.athlete == athlete.name;
 			});
 
+
+			// $.each(sked, function() {
+			// 	// cut our date down to just YYYY-MM-DD
+			// 	// parse it into a date object
+			// 	// then format it into our MMM. DD, YYYY format
+			// 	var nextDate = this.nextdate.substring(0,10);
+			// 	nextDate = dateParser.parse(nextDate);
+			// 	nextDate = dateFormat(nextDate);
+			//
+			// 	// create a string to get a valid date and time to be parsed into an accurate js date
+			// 	dateTime = nextDate + ", " + this.nexttime;
+			// 	jsDate = Date.parse(dateTime);
+			//
+			//
+			// 	if (athlete.name !== this.athlete && found === true) {
+			// 		return false;
+			// 	}
+			//
+			// 	// // add each event into our events key
+			// 	// if (athlete.name === this.athlete) {
+			// 	// 	var event = {
+			// 	// 		"jsdate": jsDate,
+			// 	// 		"event": this.event,
+			// 	// 		"next_date": nextDate,
+			// 	// 		"next_time": this.nexttime,
+			// 	// 		"channel": this.channel,
+			// 	// 		"roundresult": this.roundresult,
+			// 	// 		"gold": this.gold,
+			// 	// 		"silver": this.silver,
+			// 	// 		"bronze": this.bronze,
+			// 	// 		"completed": this.completed
+			// 	// 	};
+			// 	//
+			// 	// 	found = true;
+			// 	// 	// push each event to the events array on each athlete
+			// 	// 	athlete.events.push(event);
+			// 	//
+			// 	// 	// sorts the individual events on each athlete by next event date and time
+			// 	// 	athlete.events.sort(function(a, b) {
+			// 	// 		var keyA = new Date(a.jsdate),
+			// 	// 			keyB = new Date(b.jsdate);
+			// 	//
+			// 	// 		if (keyA < keyB) {return -1;}
+			// 	// 		if (keyA > keyB) {return 1;}
+			// 	// 		return 0;
+			// 	// 	});
+			// 	//
+			// 	// 	// setting a variable that will be where we splice the events
+			// 	// 	// array when we check to see if the events have finished
+			// 	// 	var spliceSpot;
+			// 	//
+			// 	// 	// iterate over each event, and find the last event to already
+			// 	// 	// have occurred
+			// 	// 	for (i=0; i<athlete.events.length; i++) {
+			// 	// 		if (athlete.events[i].jsdate < currentDate){
+			// 	// 			spliceSpot = i;
+			// 	// 		}
+			// 	// 	}
+			// 	//
+			// 	// 	// create an array of events that are finished and have no upcoming times
+			// 	// 	var completedEvents = athlete.events.splice(0, (spliceSpot + 1));
+			// 	//
+			// 	// 	// merge the events back together in one array
+			// 	// 	// with the completed events at the end
+			// 	// 	athlete.events = athlete.events.concat(completedEvents);
+			// 	//
+			// 	// }
+			// });
+
 		});
+		console.timeEnd("marrying");
+		// end each function that marries the two data sets together
 
 		// sorts the athletes by their next event date and time
+
 		athletes.sort(function(a, b) {
-			var keyA = new Date(a.events[0].jsdate),
-				keyB = new Date(b.events[0].jsdate);
+			var keyA = new Date(a.events[0].jsDate),
+				keyB = new Date(b.events[0].jsDate);
 			if (keyA < keyB) {return -1;}
 			if (keyA > keyB) {return 1;}
 			return 0;
 		});
-
 
 		// getting the current date in the the same format as the next_date value on
 		// our athlete objects
@@ -163,17 +234,18 @@ $(document).ready(function() {
 		// that builds out our divs of the athletes competing today
 		buildTodaysAths(todaysAths, targetDate);
 
-
 		// same as above, we're going to run through all the athletes and
 		// move the ones who are finished competiting to the end of the list
 		var spliceSpot;
 
 		// find the last athlete to have already finished competiting
 		for (i=0; i<athletes.length; i++) {
-			if (athletes[i].events[0].jsdate < currentDate){
+			if (athletes[i].events[0].jsDate < currentDate){
 				spliceSpot = i;
 			}
 		}
+
+		console.log(spliceSpot);
 
 		// create an array of finished athletes, then add it back into the
 		// master athletes array at the end
@@ -181,11 +253,14 @@ $(document).ready(function() {
 		athletes = athletes.concat(finished);
 
 		// pass the data off to our olympian drawing function
-		buildOlympians(athletes);
+		buildOlympians(athletes, "#olympians");
 
 		// build the dropdowns
 		buildFilters();
 	}
+
+
+
 
 	/////////////////////////////////////////////
 	///// BUILDING OUT TODAY'S ATHLETES /////////
@@ -277,14 +352,14 @@ $(document).ready(function() {
 	// as with most things in d3, it's magical. mostly just creating
 	// html elements based off the data for each athlete
 
-	function buildOlympians(athletes) {
-
-		var athDivs = d3.select("#olympians").selectAll(".athlete")
+	function buildOlympians(athletes, target) {
+		var athDivs = d3.select(target).selectAll(".athlete")
 			.data(athletes);
 
 		athDivs.enter().append("div")
 			.attr("class", function(d) {
 				var sport = d.sport.toLowerCase();
+				sport = sport.replace(/ |'|&/g, "");
 				if (d.bronze > 0 || d.silver > 0 || d.gold > 0) {
 					return "athlete medalWinner " + sport;
 				} else {
@@ -308,10 +383,12 @@ $(document).ready(function() {
 			.attr("class", "fa fa-plus-circle expander");
 
 		var athImage = athDivs.append("img")
-			.attr("src", function(d) {
+			.attr("src", "images/_defaultImage.jpg");
+
+		athImage.attr("src", function(d) {
 				var name = d.name.toLowerCase();
 				name = name.replace(/ /g, "");
-				return "/images/_" + name +".jpg";
+				return "images/_" + name +".jpg";
 			})
 			.attr("alt", function(d) {return d.name;});
 
@@ -375,7 +452,7 @@ $(document).ready(function() {
 				.attr("class", "info")
 				.html(function(d) {
 					var bioContent = "<p class='label'>Texas tie</p>";
-					bioContent += "<h6>" + d.hometown + "</h6>";
+					bioContent += "<h6>" + d.texastie + "</h6>";
  					return bioContent;
 				});
 
@@ -399,7 +476,7 @@ $(document).ready(function() {
 				.text("Schedule and Results");
 
 			athTable.append("table")
-			.attr("class", "schedule")
+			.attr("class", "scheduleTable")
 			.html(function(d) {
 
 				var content = "";
@@ -410,7 +487,6 @@ $(document).ready(function() {
 						bronze = false;
 
 					if (i >= 0) {
-
 						if (d.events[i].gold === "x") {
 							gold = true;
 						} else if (d.events[i].silver === "x") {
@@ -421,12 +497,12 @@ $(document).ready(function() {
 					}
 
 					if (i === -1) {
-						content +=  "<tr><th>Event</th><th>Time/Date</th><th>Ch.</th><th>Rd./Pl.</th></tr>";
+						content +=  "<tr><th>Event</th><th>Time/Date</th><th>Ch.</th><th>Round/Place</th></tr>";
 
 					} else {
 
 						if (d.events[i].completed !== "yes") {
-							content += "<tr><td>" + d.events[i].event + "</td><td>" + d.events[i].next_time +", " + d.events[i].next_date + "</td><td>" + d.events[i].channel + "</td>";
+							content += "<tr><td>" + d.events[i].event + "</td><td>" + d.events[i].nexttime +", " + d.events[i].next_date + "</td><td>" + d.events[i].channel + "</td>";
 						} else {
 							content += "<tr><td>" + d.events[i].event + "</td><td>Completed</td><td>" + d.events[i].channel + "</td>";
 						}
@@ -584,7 +660,6 @@ $(document).ready(function() {
 	var $grid;
 
 	function runIsotope() {
-
 		// setting up the isotope grid. for more info, see: http://isotope.metafizzy.co/
 		$grid = $("#olympians").isotope({
 			layoutMode: 'packery',
@@ -623,7 +698,9 @@ $(document).ready(function() {
 		}
 
 		for (i = 0; i < sports.length; i++) {
-			var option = "<option data-selection='" + sports[i].toLowerCase() + "'>" + sports[i] + "</option>";
+			var sport = sports[i].toLowerCase();
+			sport = sport.replace(/ |'|&/g, "");
+			var option = "<option data-selection='" + sport + "'>" + sports[i] + "</option>";
 			$("#sports").append(option);
 		}
 	}

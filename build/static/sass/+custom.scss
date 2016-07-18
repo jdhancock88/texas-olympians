@@ -68,9 +68,28 @@
     margin-top: 2.4rem;
     padding: 2.4rem 0 0 1%;
     border-top: 1px solid $black121;
+    font-family: $sans;
+    display: block;
+    h6 {
+        font-weight: bold;
+        float: left; margin-right: 10px;
+        @include type(1.5rem, 1.8rem, 0);
+        width: 115px;
+    }
     select {
-        margin: 0 1.2rem 2.4rem 0;
+        margin: 0 20px 1.2rem 0;
         font-size: 1.6rem;
+        float: left;
+        width: 100%;
+        max-width: 150px;
+        &:last-of-type {
+            margin-right: 0;
+        }
+    }
+    @media(max-width: 650px) {
+        h6 {
+            clear: left;
+        }
     }
 }
 
@@ -97,6 +116,19 @@
     }
     .schedule, .links {
         display: none;
+    }
+    @media(max-width: 1200px) {
+        width: 30%;
+        margin: 0 1.66% 2% 1.66%;
+    }
+    @media(max-width: 800px) {
+        width: 45%;
+        margin: 0 2.5% 5% 2.5%;
+    }
+    @media (max-width: 500px) {
+        width: 100%;
+        margin: 0 0 2.4rem 0;
+        height: 650px;
     }
 }
 
@@ -194,6 +226,9 @@
     @include type(1.3rem, 1.8rem, 0);
     width: 100%;
     margin-bottom: 20px;
+    table {
+        width: 100%;
+    }
     tr {
         text-align: left;
         border-bottom: 1px solid $black121;
@@ -256,15 +291,26 @@
 .expanded {
     width: 98%;
     height: 500px;
-    margin: 4.8rem 2%;
+    margin: 0rem 1% 2%;
     .links {
         display: block;
+        width: 38%;
+        float: right;
+        @media (max-width: 1300px) {
+            width: 100%;
+            float: none;
+        }
     }
     .schedule {
-        width: 100%;
+        width: 60%;
         display: block;
+        float: left;
         table {
             display: table;
+        }
+        @media (max-width: 1300px) {
+            width: 100%;
+            float: none;
         }
     }
     .expander {

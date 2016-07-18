@@ -49,10 +49,28 @@
 #filters {
   margin-top: 2.4rem;
   padding: 2.4rem 0 0 1%;
-  border-top: 1px solid #797979; }
+  border-top: 1px solid #797979;
+  font-family: "Open Sans", Arial, sans-serif;
+  display: block; }
+  #filters h6 {
+    font-weight: bold;
+    float: left;
+    margin-right: 10px;
+    font-size: 1.5rem;
+    line-height: 1.8rem;
+    margin-bottom: 0;
+    width: 115px; }
   #filters select {
-    margin: 0 1.2rem 2.4rem 0;
-    font-size: 1.6rem; }
+    margin: 0 20px 1.2rem 0;
+    font-size: 1.6rem;
+    float: left;
+    width: 100%;
+    max-width: 150px; }
+    #filters select:last-of-type {
+      margin-right: 0; }
+  @media (max-width: 650px) {
+    #filters h6 {
+      clear: left; } }
 
 .grid-sizer {
   width: 23.5%; }
@@ -75,6 +93,19 @@
     margin: 5px 5px 0 0; }
   .athlete .schedule, .athlete .links {
     display: none; }
+  @media (max-width: 1200px) {
+    .athlete {
+      width: 30%;
+      margin: 0 1.66% 2% 1.66%; } }
+  @media (max-width: 800px) {
+    .athlete {
+      width: 45%;
+      margin: 0 2.5% 5% 2.5%; } }
+  @media (max-width: 500px) {
+    .athlete {
+      width: 100%;
+      margin: 0 0 2.4rem 0;
+      height: 650px; } }
 
 .expander {
   position: absolute;
@@ -168,6 +199,8 @@
   margin-bottom: 0;
   width: 100%;
   margin-bottom: 20px; }
+  .schedule table {
+    width: 100%; }
   .schedule tr {
     text-align: left;
     border-bottom: 1px solid #797979; }
@@ -228,14 +261,25 @@
 .expanded {
   width: 98%;
   height: 500px;
-  margin: 4.8rem 2%; }
+  margin: 0rem 1% 2%; }
   .expanded .links {
-    display: block; }
+    display: block;
+    width: 38%;
+    float: right; }
+    @media (max-width: 1300px) {
+      .expanded .links {
+        width: 100%;
+        float: none; } }
   .expanded .schedule {
-    width: 100%;
-    display: block; }
+    width: 60%;
+    display: block;
+    float: left; }
     .expanded .schedule table {
       display: table; }
+    @media (max-width: 1300px) {
+      .expanded .schedule {
+        width: 100%;
+        float: none; } }
   .expanded .expander {
     top: 20px;
     right: 20px;
