@@ -882,59 +882,85 @@ XX. ADS
     font-family: Oswald, Arial, sans-serif;
     font-weight: bold;
     text-transform: uppercase;
-    margin-bottom: .6rem;
-    padding-left: 2%; }
+    margin-bottom: .6rem; }
 
 .chatter {
   font-size: 1.3rem;
   line-height: 1.8rem;
-  margin-bottom: 2.4rem;
-  padding-left: 2%; }
+  margin-bottom: 2.4rem; }
 
 .upNext {
-  width: 20%;
-  padding: 0 2%;
+  width: 19%;
+  padding: 5px;
   float: left;
-  margin-bottom: 1.2rem;
-  border-right: 1px solid #797979;
-  margin-bottom: -1000px;
-  padding-bottom: 1000px; }
+  margin-right: 1.25%;
+  background-color: #ebebeb;
+  border-radius: 3px;
+  margin-bottom: 1.2rem; }
+  .upNext img {
+    float: left;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    margin-right: 10px; }
   .upNext:nth-child(5n+5) {
-    border-right: none; }
-  .upNext:last-of-type {
-    border-right: none; }
+    margin-right: 0; }
   .upNext h6 {
     font-family: Oswald, Arial, sans-serif;
     font-weight: bold;
-    cursor: pointer; }
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 25px;
+    margin-bottom: 0.6rem;
+    padding: 0 0 .9rem 35px;
+    border-bottom: 1px solid white;
+    text-indent: 0px; }
     .upNext h6:hover {
       text-decoration: underline; }
-  .upNext img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    float: left; }
   .upNext h6, .upNext p {
-    width: calc(100% - 60px);
-    float: right; }
+    width: 100%; }
   .upNext p {
-    font-size: 1.2rem;
-    line-height: 1.5rem;
+    font-size: 1.3rem;
+    line-height: 1.8rem;
     margin-bottom: 0; }
+  @media (max-width: 1000px) {
+    .upNext {
+      width: 32%;
+      margin-right: 2%; }
+      .upNext:nth-child(5n+5) {
+        margin-right: 2%; }
+      .upNext:nth-child(3n+3) {
+        margin-right: 0; } }
+  @media (max-width: 650px) {
+    .upNext {
+      width: 49%;
+      margin-right: 2%; }
+      .upNext:nth-child(3n+3) {
+        margin-right: 2%; }
+      .upNext:nth-child(even) {
+        margin-right: 0; } }
+  @media (max-width: 450px) {
+    .upNext {
+      width: 100%;
+      margin-right: 0; }
+      .upNext:nth-child(3n+3), .upNext:nth-child(5n+5) {
+        margin-right: 0; } }
 
 #filters {
-  margin-top: 2.4rem;
-  padding: 2.4rem 0 0 1%;
-  border-top: 1px solid #797979;
+  margin: 2.4rem 0;
+  padding: 2.4rem 0 2.4rem 1%;
+  border-top: 1px solid #ebebeb;
   font-family: "Open Sans", Arial, sans-serif;
-  display: block; }
+  display: block;
+  border-bottom: 1px solid #ebebeb; }
   #filters h6 {
     font-weight: bold;
     float: left;
     margin-right: 10px;
-    font-size: 1.5rem;
-    line-height: 1.8rem;
+    font-size: 1.4rem;
+    line-height: 2rem;
     margin-bottom: 0;
+    text-transform: uppercase;
     width: 115px; }
   #filters select {
     margin: 0 20px 1.2rem 0;
@@ -944,6 +970,15 @@ XX. ADS
     max-width: 150px; }
     #filters select:last-of-type {
       margin-right: 0; }
+  #filters.fixed {
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+    width: 100%;
+    margin-top: 0;
+    left: 0;
+    padding: 1.2rem 5%; }
   @media (max-width: 650px) {
     #filters h6 {
       clear: left; } }
@@ -957,7 +992,10 @@ XX. ADS
   background-color: #f0f0f0;
   font-family: "Open Sans", Arial, sans-serif;
   height: 550px;
-  overflow: hidden; }
+  overflow: hidden;
+  display: none; }
+  .athlete.visible {
+    display: block; }
   .athlete img {
     width: 100%; }
   .athlete .flag {
@@ -1190,6 +1228,44 @@ XX. ADS
       clear: left; }
   .expanded .blurb {
     margin-bottom: 20px; }
+  @media (max-width: 1100px) {
+    .expanded {
+      height: 300px; }
+      .expanded img {
+        width: 300px; }
+      .expanded .athContent {
+        height: 300px;
+        width: calc(100% - 300px);
+        overflow-y: auto; } }
+  @media (max-width: 800px) {
+    .expanded {
+      height: auto;
+      position: relative;
+      width: 100%; }
+      .expanded img {
+        width: 100%;
+        float: none; }
+      .expanded .athContent {
+        height: auto;
+        width: 100%;
+        float: none;
+        overflow-y: initial; }
+      .expanded .medalGroup {
+        width: 100px;
+        height: 44px;
+        margin: -40px auto 10px;
+        float: none; }
+        .expanded .medalGroup li {
+          width: 33.3%;
+          text-align: center;
+          padding: 20px 0 0 0; }
+          .expanded .medalGroup li:before {
+            left: 50%;
+            margin-left: -8px; } }
+  @media (max-width: 500px) {
+    .expanded {
+      padding: 0 0;
+      margin: 0 0 2.4rem; } }
 
 .hidden {
   display: none; }
@@ -1211,3 +1287,31 @@ XX. ADS
 
 .bronzeMedal {
   background-color: #cd7f32; }
+
+#loadMore {
+  width: 150px;
+  font-family: "Open Sans", Arial, sans-serif;
+  border: 2px solid #0185d3;
+  border-radius: 5px;
+  background-color: white;
+  color: #0185d3;
+  font-size: 1.4rem;
+  line-height: 2.4rem;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  font-weight: bold;
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+  -webkit-transtion: all 0.25s ease-out;
+  -moz-transition: all 0.25s ease-out;
+  -o-transition: all 0.25s ease-out;
+  transition: all 0.25s ease-out; }
+  #loadMore:hover {
+    background-color: #0185d3;
+    color: white; }
+  #loadMore:focus {
+    outline: 0; }
+
+.noShow {
+  display: none; }

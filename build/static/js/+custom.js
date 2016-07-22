@@ -31,6 +31,8 @@ $(document).ready(function() {
 	var todaysAths = [];
 
 
+	var nVisible = 11;
+
 
 	/////////////////////////////////////////////
 	///// GETTING THE DATA //////////////////////
@@ -268,22 +270,20 @@ $(document).ready(function() {
 
 
 	function buildTodaysAths(data, targetDate) {
+		console.log(data);
 		if (data.length > 0) {
 			var todaysAths = d3.select("#todaysAths").selectAll(".upNext")
 				.data(data);
 
 			todaysAths.enter().append("div")
-				.attr("class", "upNext clearFix")
-				.append("img")
+				.attr("class", "upNext clearFix");
+
+			todaysAths.append("img")
 				.attr("src", function(d) {
-					var name = d.name.toLowerCase();
-					name = name.replace(/ /g, "");
-					return "images/_" + name + "Mug.jpg";
-				})
-				.attr("alt", function(d) {
-					return d.name;
-				})
-				.attr("class", "nextAthlete");
+					var country = d.nation.toLowerCase();
+					country = country.replace(/ /g, "");
+					return "images/_" + country + "Flag.jpg";
+				});
 
 			todaysAths.append("h6")
 				.text(function(d) {
@@ -306,7 +306,7 @@ $(document).ready(function() {
 					var content;
 					for (i=0; i < d.events.length; i++) {
 						if (d.events[i].next_date == targetDate) {
-							content = d.events[i].next_time + ", " + d.events[i].channel;
+							content = d.events[i].nexttime + ", " + d.events[i].channel;
 						}
 					}
 					return content;
@@ -337,6 +337,8 @@ $(document).ready(function() {
 			// pass that div off to the checkExpansion function, which will
 			// check if it's expanded currently and show it, then reposition
 			// the window to accomodate any movement
+
+			showAthletes(1000);
 			checkExpansion(athlete);
 		});
 
@@ -385,7 +387,7 @@ $(document).ready(function() {
 		var athImage = athDivs.append("img")
 			.attr("src", "images/_defaultImage.jpg");
 
-		athImage.attr("src", function(d) {
+		athImage.attr("data-src", function(d) {
 				var name = d.name.toLowerCase();
 				name = name.replace(/ /g, "");
 				return "images/_" + name +".jpg";
@@ -526,9 +528,11 @@ $(document).ready(function() {
 		var athLinks = athContent.append("ul")
 			.attr("class", "links")
 			.html(function(d) {
-				var content = "<p class='label'>Related content</p>";
+
+				var content = "";
 
 				if (d.link1text !== undefined) {
+					content += "<p class='label'>Related content</p>";
 					content += "<li><a target='_blank' href='" + d.link1url + "'>" + d.link1text + "</a></li>";
 				}
 
@@ -562,9 +566,42 @@ $(document).ready(function() {
 			checkExpansion(athlete);
 		});
 
-		// initializes isotope
-		runIsotope();
+
+		showAthletes(nVisible);
+
 	}
+
+
+	/////////////////////////////////////////////
+	///// DISPLAYING 12 AT A TIME  //////////////
+	/////////////////////////////////////////////
+
+
+
+	function showAthletes(n) {
+		if (n > $(".athlete").length - 1) {
+			n = $(".athlete").length - 1;
+			$("#loadMore").addClass("noShow");
+		}
+		for (i = 0; i <= n; i++) {
+			var imagePath = $(".athlete").eq(i).children("img").attr("data-src");
+			$(".athlete").eq(i).addClass("visible").children("img").attr("src", imagePath);
+		}
+
+		if (n < $(".athlete").length - 1) {
+			nVisible = nVisible + 12;
+		} else {
+			$("#loadMore").remove();
+		}
+
+		runIsotope();
+
+	}
+
+	$("#loadMore").click(function() {
+		showAthletes(nVisible);
+	});
+
 
 	/////////////////////////////////////////////
 	///// CHECKING EXPANSION OR COLLAPSE ////////
@@ -711,11 +748,13 @@ $(document).ready(function() {
 
 
 	$("#sports").change(function() {
+		$(".athlete").addClass("visible");
 		sportsSelection = $(this).find("option:selected").attr("data-selection");
 		filterAthletes(sportsSelection, medalSelection);
 	});
 
 	$("#medals").change(function() {
+		$(".athlete").addClass("visible");
 		medalSelection = $(this).find("option:selected").attr("data-selection");
 		filterAthletes(sportsSelection, medalSelection);
 	});
@@ -731,11 +770,29 @@ $(document).ready(function() {
 
 	function filterAthletes(sport, medal) {
 
+		$("#loadMore").addClass("noShow");
+
+
 		filterString = "."+sport+"."+medal;
 		$grid.isotope({
 			filter: filterString
 		});
 
+		$.each($(filterString), function(k,v) {
+			var imagePath = $(this).children("img").attr("data-src");
+			$(this).children("img").attr("src", imagePath);
+		});
+
 	}
+
+	$(window).scroll(function() {
+		var athletesTop = $("#olympians").offset().top;
+		if ($(window).scrollTop() > athletesTop) {
+			$("#filters").addClass("fixed");
+		} else {
+			$("#filters").removeClass("fixed");
+		}
+
+	});
 
 });
