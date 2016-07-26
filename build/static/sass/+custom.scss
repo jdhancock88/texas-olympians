@@ -14,12 +14,19 @@
     width: 100%;
     font-family: $sans;
     overflow: hidden;
+    margin: 4.8rem 0;
     h4 {
         font-family: $custom;
         font-weight: bold;
         text-transform: uppercase;
         margin-bottom: .6rem;
     }
+}
+.chatterHed {
+    font-family: $custom;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
 }
 .chatter {
     @include type(1.3rem, 1.8rem, 2.4rem);
@@ -89,26 +96,37 @@
     }
 }
 
+@keyframes filterAnimation {
+    from {
+        -webkit-transform: translate3d(0, -500px, 0);
+        -moz-transform: translate3d(0, -500px, 0);
+        -o-transform: translate3d(0, -500px, 0);
+        transform: translate3d(0, -500px, 0);
+    }
+    to {
+        -webkit-transform: translate3d(0, -500px, 0);
+        -moz-transform: translate3d(0, -500px, 0);
+        -o-transform: translate3d(0, -500px, 0);
+        transform: translate3d(0, 0, 0);
+    }
+}
+
 #filters {
     margin: 2.4rem 0;
     padding: 2.4rem 0 2.4rem 1%;
     border-top: 1px solid $black235;
     font-family: $sans;
     display: block;
-    border-bottom: 1px solid $black235;
     h6 {
         font-weight: bold;
         float: left; margin-right: 10px;
-        @include type(1.4rem, 2rem, 0);
+        @include type(1.3rem, 2rem, 0);
         text-transform: uppercase;
-        width: 115px;
     }
     select {
         margin: 0 20px 1.2rem 0;
         font-size: 1.6rem;
         float: left;
-        width: 100%;
-        max-width: 150px;
         &:last-of-type {
             margin-right: 0;
         }
@@ -122,10 +140,18 @@
         margin-top: 0;
         left: 0;
         padding: 1.2rem 5%;
+        border-bottom: 1px solid $black235;
+        box-shadow: 0 2px 5px rgba(33,33,33,.3);
+        animation-name: filterAnimation;
+        animation-duration: .5s;
     }
-    @media(max-width: 650px) {
+    @media(max-width: 800px) {
         h6 {
             clear: left;
+            width: 140px;
+        }
+        select {
+            width: 120px;
         }
     }
 }
@@ -358,6 +384,15 @@
         top: 20px;
         right: 20px;
         color: $black33;
+        @media (max-width: 800px) {
+            top: 20px;
+            right: 20px;
+            color: white;
+        }
+        @media (max-width: 500px) {
+            top: 10px;
+            right: 10px;
+        }
     }
     img {
         float: left;
@@ -469,8 +504,14 @@
     background-color: $bronze;
 }
 
-#loadMore {
-    width: 150px;
+#moreButtons {
+    width: 280px;
+    margin: 2.4rem auto 0;
+}
+
+.moreButton {
+    float: left;
+    width: 135px;
     font-family: $sans;
     border: 2px solid $dmnblue;
     border-radius: 5px;
@@ -479,7 +520,7 @@
     @include type(1.4rem, 2.4rem, 0);
     text-transform: uppercase;
     font-weight: bold;
-    margin: 0 auto;
+    margin: 0 10px 0 0;
     display: block;
     cursor: pointer;
     @include transition(all, .25s, ease-out);
@@ -489,6 +530,9 @@
     }
     &:focus {
         outline: 0;
+    }
+    &:last-of-type {
+        margin-right: 0;
     }
 }
 

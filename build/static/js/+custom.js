@@ -10,7 +10,6 @@ $(document).ready(function() {
 
 	currentDate = Date.parse(currentDate);
 
-	console.log(Date.parse("today"));
 
 	$('.copyright').text(year);
 
@@ -25,28 +24,48 @@ $(document).ready(function() {
 	var dateParser = d3.time.format("%Y-%m-%d");
 	var currentDateParser = d3.time.format("%b %d %Y");
 
-	// date formater turns the date object into the correct Mon. Day, Year format
-	var dateFormat = d3.time.format("%b. %d, %Y");
+	function dateConverter(date, formatter) {
+		date = date.substring(0,10);
+		date = dateParser.parse(date);
+		date = formatter(date);
 
+		return date;
+	}
+
+	// date formater turns the date object into the correct Mon. Day, Year format
+	var dateFormat = d3.time.format("%B %e, %Y");
+	var dateFormatAbb = d3.time.format("%b. %e, %Y");
+
+	// placeholder array for the athletes that are competing on any given day
 	var todaysAths = [];
 
-
+	// number of athlete cards that are visible (0 indexed)
 	var nVisible = 11;
+
+	// array that will hold all the competition dates
+	var dates = [];
 
 
 	/////////////////////////////////////////////
 	///// GETTING THE DATA //////////////////////
 	/////////////////////////////////////////////
+
 	$.getJSON("http://interactives.dallasnews.com/data-store/2016/062016-texas-olympians-sked.json", function(data) {
+
+		// set our sked array equal to the data returned
 		sked = data;
+
+		// update our update date in the byline
+		var updateDate = dateConverter(sked[0].updated, dateFormat);
+		sked.shift();
+		$('.update').text(updateDate);
+
 
 		_.forEach(sked, function(value, key) {
 			// cut our date down to just YYYY-MM-DD
 			// parse it into a date object
 			// then format it into our MMM. DD, YYYY format
-			var nextDate = value.nextdate.substring(0,10);
-			nextDate = dateParser.parse(nextDate);
-			nextDate = dateFormat(nextDate);
+			var nextDate = dateConverter(value.nextdate, dateFormatAbb);
 
 			// create a string to get a valid date and time to be parsed into an accurate js date
 			dateTime = nextDate + ", " + value.nexttime;
@@ -57,20 +76,18 @@ $(document).ready(function() {
 			value.silver = value.silver;
 			value.bronze = value.bronze;
 
-			// sorts the individual events on each athlete by next event date and time
-			// sked.sort(function(a, b) {
-			// 	var keyA = new Date(a.next_date),
-			// 		keyB = new Date(b.next_date);
-			//
-			// 	if (keyA < keyB) {return 1;}
-			// 	if (keyA > keyB) {return -1;}
-			// 	return 0;
-			// });
-
-
 		});
 
+		// order the sked by date
 		sked = _.orderBy(sked, "jsDate", "asc");
+
+		// populate the dates array with each competition date only once
+		// this will be used later to create the competition dates dropdown
+		for (i = 0; i < sked.length; i++) {
+			if ($.inArray(sked[i].next_date, dates) === -1) {
+				dates.push(sked[i].next_date);
+			}
+		}
 
 		// setting a variable that will be where we splice the events
 		// array when we check to see if the events have finished
@@ -96,6 +113,7 @@ $(document).ready(function() {
 		if (dataCounter === 2) {
 			setupData(athletes, sked);
 		}
+
 	});
 
 	$.getJSON("http://interactives.dallasnews.com/data-store/2016/062016-texas-olympians-athletes.json", function(data) {
@@ -114,105 +132,37 @@ $(document).ready(function() {
 	///// SETTING UP OUR DATA FOR ALL ATHLETES //
 	/////////////////////////////////////////////
 
-
-
 	// for each athlete, we'll cycle through our sked and add each event
 	// to an events key on the athlete object
 
 	function setupData(athletes, sked) {
 
-		console.time("marrying");
 		_.forEach(athletes, function(value, key) {
 
 			var athlete = value;
 			athlete.events = [];
 
-			var found = false;
-
 			athlete.events = _.filter(sked, function(e) {
 				return e.athlete == athlete.name;
 			});
 
-
-			// $.each(sked, function() {
-			// 	// cut our date down to just YYYY-MM-DD
-			// 	// parse it into a date object
-			// 	// then format it into our MMM. DD, YYYY format
-			// 	var nextDate = this.nextdate.substring(0,10);
-			// 	nextDate = dateParser.parse(nextDate);
-			// 	nextDate = dateFormat(nextDate);
-			//
-			// 	// create a string to get a valid date and time to be parsed into an accurate js date
-			// 	dateTime = nextDate + ", " + this.nexttime;
-			// 	jsDate = Date.parse(dateTime);
-			//
-			//
-			// 	if (athlete.name !== this.athlete && found === true) {
-			// 		return false;
-			// 	}
-			//
-			// 	// // add each event into our events key
-			// 	// if (athlete.name === this.athlete) {
-			// 	// 	var event = {
-			// 	// 		"jsdate": jsDate,
-			// 	// 		"event": this.event,
-			// 	// 		"next_date": nextDate,
-			// 	// 		"next_time": this.nexttime,
-			// 	// 		"channel": this.channel,
-			// 	// 		"roundresult": this.roundresult,
-			// 	// 		"gold": this.gold,
-			// 	// 		"silver": this.silver,
-			// 	// 		"bronze": this.bronze,
-			// 	// 		"completed": this.completed
-			// 	// 	};
-			// 	//
-			// 	// 	found = true;
-			// 	// 	// push each event to the events array on each athlete
-			// 	// 	athlete.events.push(event);
-			// 	//
-			// 	// 	// sorts the individual events on each athlete by next event date and time
-			// 	// 	athlete.events.sort(function(a, b) {
-			// 	// 		var keyA = new Date(a.jsdate),
-			// 	// 			keyB = new Date(b.jsdate);
-			// 	//
-			// 	// 		if (keyA < keyB) {return -1;}
-			// 	// 		if (keyA > keyB) {return 1;}
-			// 	// 		return 0;
-			// 	// 	});
-			// 	//
-			// 	// 	// setting a variable that will be where we splice the events
-			// 	// 	// array when we check to see if the events have finished
-			// 	// 	var spliceSpot;
-			// 	//
-			// 	// 	// iterate over each event, and find the last event to already
-			// 	// 	// have occurred
-			// 	// 	for (i=0; i<athlete.events.length; i++) {
-			// 	// 		if (athlete.events[i].jsdate < currentDate){
-			// 	// 			spliceSpot = i;
-			// 	// 		}
-			// 	// 	}
-			// 	//
-			// 	// 	// create an array of events that are finished and have no upcoming times
-			// 	// 	var completedEvents = athlete.events.splice(0, (spliceSpot + 1));
-			// 	//
-			// 	// 	// merge the events back together in one array
-			// 	// 	// with the completed events at the end
-			// 	// 	athlete.events = athlete.events.concat(completedEvents);
-			// 	//
-			// 	// }
-			// });
-
 		});
-		console.timeEnd("marrying");
-		// end each function that marries the two data sets together
 
-		// sorts the athletes by their next event date and time
 
-		athletes.sort(function(a, b) {
-			var keyA = new Date(a.events[0].jsDate),
-				keyB = new Date(b.events[0].jsDate);
-			if (keyA < keyB) {return -1;}
-			if (keyA > keyB) {return 1;}
+		// sort the athletes alphabetically by last name
+
+		athletes.sort(function(a, b){
+			var aName = a.name.trim();
+			var bName = b.name.trim();
+
+			var aSplit = aName.split(" ");
+			var bSplit = bName.split(" ");
+
+			var aLast = aSplit[aSplit.length - 1];
+			var bLast = bSplit[bSplit.length - 1];
+
+			if (aLast < bLast) return -1;
+			if (aLast > bLast) return 1;
 			return 0;
 		});
 
@@ -220,39 +170,24 @@ $(document).ready(function() {
 		// our athlete objects
 		var targetDate = currentDate.toString().substring(4, 15);
 		targetDate = currentDateParser.parse(targetDate);
-		targetDate = dateFormat(targetDate);
+		targetDate = dateFormatAbb(targetDate);
 
 		// checking over each of our athletes and populating the todaysAths array
 		// with each of the athletes that match the current date
 		for (i = 0; i < athletes.length; i++) {
 			for (k = 0; k < athletes[i].events.length; k++) {
+				console.log(athletes[i].events[k].next_date, targetDate);
 				if (athletes[i].events[k].next_date === targetDate) {
 					todaysAths.push(athletes[i]);
 				}
 			}
 		}
 
+		console.log(todaysAths);
+
 		// passing our todayAths and the targetDate off to the function
 		// that builds out our divs of the athletes competing today
 		buildTodaysAths(todaysAths, targetDate);
-
-		// same as above, we're going to run through all the athletes and
-		// move the ones who are finished competiting to the end of the list
-		var spliceSpot;
-
-		// find the last athlete to have already finished competiting
-		for (i=0; i<athletes.length; i++) {
-			if (athletes[i].events[0].jsDate < currentDate){
-				spliceSpot = i;
-			}
-		}
-
-		console.log(spliceSpot);
-
-		// create an array of finished athletes, then add it back into the
-		// master athletes array at the end
-		var finished = athletes.splice(0, (spliceSpot+1));
-		athletes = athletes.concat(finished);
 
 		// pass the data off to our olympian drawing function
 		buildOlympians(athletes, "#olympians");
@@ -260,9 +195,6 @@ $(document).ready(function() {
 		// build the dropdowns
 		buildFilters();
 	}
-
-
-
 
 	/////////////////////////////////////////////
 	///// BUILDING OUT TODAY'S ATHLETES /////////
@@ -295,7 +227,7 @@ $(document).ready(function() {
 					var content;
 					for (i=0; i < d.events.length; i++) {
 						if (d.events[i].next_date === targetDate) {
-							content = d.events[i].event;
+							content = d.sport + ", " + d.events[i].event;
 						}
 					}
 					return content;
@@ -336,12 +268,13 @@ $(document).ready(function() {
 
 			// pass that div off to the checkExpansion function, which will
 			// check if it's expanded currently and show it, then reposition
-			// the window to accomodate any movement
+			// the window to accomodate any movement. It'll also run the showAthletes function
+			// with a number large enough to make sure all athletes are displayed
 
-			showAthletes(1000);
 			checkExpansion(athlete);
-		});
+			showAthletes(1000);
 
+		});
 
 	}
 
@@ -355,6 +288,8 @@ $(document).ready(function() {
 	// html elements based off the data for each athlete
 
 	function buildOlympians(athletes, target) {
+
+		console.log(athletes);
 		var athDivs = d3.select(target).selectAll(".athlete")
 			.data(athletes);
 
@@ -362,10 +297,20 @@ $(document).ready(function() {
 			.attr("class", function(d) {
 				var sport = d.sport.toLowerCase();
 				sport = sport.replace(/ |'|&/g, "");
+
+				var compDates = "";
+
+				for (j = 0; j < d.events.length; j++) {
+					thisDate = d.events[j].next_date.toLowerCase();
+					thisDate = thisDate.replace(/ |,|\./g, "");
+					compDates += (" " + thisDate);
+				}
+
+
 				if (d.bronze > 0 || d.silver > 0 || d.gold > 0) {
-					return "athlete medalWinner " + sport;
+					return "athlete medalWinner " + sport + compDates;
 				} else {
-					return "athlete " + sport;
+					return "athlete " + sport + compDates;
 				}
 			})
 			.classed("bronzeWinner", function(d) {
@@ -503,8 +448,12 @@ $(document).ready(function() {
 
 					} else {
 
+						var eventDate = d.events[i].next_date;
+
+						eventDate = eventDate.slice(0, -6);
+
 						if (d.events[i].completed !== "yes") {
-							content += "<tr><td>" + d.events[i].event + "</td><td>" + d.events[i].nexttime +", " + d.events[i].next_date + "</td><td>" + d.events[i].channel + "</td>";
+							content += "<tr><td>" + d.events[i].event + "</td><td>" + d.events[i].nexttime +", " + eventDate + "</td><td>" + d.events[i].channel + "</td>";
 						} else {
 							content += "<tr><td>" + d.events[i].event + "</td><td>Completed</td><td>" + d.events[i].channel + "</td>";
 						}
@@ -576,12 +525,10 @@ $(document).ready(function() {
 	///// DISPLAYING 12 AT A TIME  //////////////
 	/////////////////////////////////////////////
 
-
-
 	function showAthletes(n) {
 		if (n > $(".athlete").length - 1) {
 			n = $(".athlete").length - 1;
-			$("#loadMore").addClass("noShow");
+			$("#moreButtons").addClass("noShow");
 		}
 		for (i = 0; i <= n; i++) {
 			var imagePath = $(".athlete").eq(i).children("img").attr("data-src");
@@ -601,6 +548,12 @@ $(document).ready(function() {
 	$("#loadMore").click(function() {
 		showAthletes(nVisible);
 	});
+
+	$("#loadAll").click(function() {
+		showAthletes(1000);
+	});
+
+
 
 
 	/////////////////////////////////////////////
@@ -705,15 +658,6 @@ $(document).ready(function() {
 			transitionDuration: 500
 		});
 
-		// test code to test the sorting function of isotope, will expand later
-		var sport = "basketball";
-		sport = "." + "basketball";
-		$("#testButton").click(function() {
-			$grid.isotope({
-				filter: sport
-			});
-		});
-
 	}
 
 
@@ -721,25 +665,49 @@ $(document).ready(function() {
 	///// CREATING DROPDOWNS ////////////////////
 	/////////////////////////////////////////////
 
+	// array that will hold all the sports
 	var sports = [];
 
+
+	// setting the individual dropdown variables to the default "athlete" class
 	var sportSelection = "athlete";
 	var medalSelection = "athlete";
+	var dateSelection = "athlete";
 
+
+	// building out our dropdown filters based on the data
 	function buildFilters() {
 
+		// iterate over the athletes array and gather up each sport listed just once
 		for (i = 0; i < athletes.length; i++) {
 			if ($.inArray(athletes[i].sport, sports) === -1) {
 				sports.push(athletes[i].sport);
 			}
 		}
 
+		// iterate over the sports array, lowercasing and removing non alphabetical
+		// characters, then build out an option element to append to the sports dropdown
+
 		for (i = 0; i < sports.length; i++) {
 			var sport = sports[i].toLowerCase();
 			sport = sport.replace(/ |'|&/g, "");
-			var option = "<option data-selection='" + sport + "'>" + sports[i] + "</option>";
-			$("#sports").append(option);
+			var sportOption = "<option data-selection='" + sport + "'>" + sports[i] + "</option>";
+			$("#sports").append(sportOption);
 		}
+
+
+		// iterate over the dates array, creating a dateClass variable that lower cases
+		// and removes spaces, commas and periods from each next_date string,
+		for (i = 0; i < dates.length; i++) {
+			var dateClass = dates[i] = dates[i].toLowerCase();
+			dateClass = dateClass.replace(/ |,|\./g, "");
+
+			// use that dateClass variable to build out an option element and append it
+			// to the dates dropdown
+			var dateOption = "<option data-selection='" + dateClass + "'>" + dates[i][0].toUpperCase() + dates[i].substring(1) + "</option>";
+			$("#dates").append(dateOption);
+		}
+
 	}
 
 	/////////////////////////////////////////////
@@ -747,44 +715,71 @@ $(document).ready(function() {
 	/////////////////////////////////////////////
 
 
+	// when one of the filter dropdowns is changed, pass off the values for the three
+	// dropdown variables to the filterAthletes function
+
 	$("#sports").change(function() {
 		$(".athlete").addClass("visible");
-		sportsSelection = $(this).find("option:selected").attr("data-selection");
-		filterAthletes(sportsSelection, medalSelection);
+		sportSelection = $(this).find("option:selected").attr("data-selection");
+		filterAthletes(sportSelection, medalSelection, dateSelection);
 	});
 
 	$("#medals").change(function() {
 		$(".athlete").addClass("visible");
 		medalSelection = $(this).find("option:selected").attr("data-selection");
-		filterAthletes(sportsSelection, medalSelection);
+		filterAthletes(sportSelection, medalSelection, dateSelection);
 	});
 
-	// $("#medals").change(function() {
-	// 	medalSelection = ($(this).find("option:selected").attr("data-selection"));
-	// 	if (medalSelection === "all athletes") {
-	// 		medalSelection = "athlete";
-	// 	} else if (medalSelection === "any")
-	// 	filterAthletes(sportsSelection, medalSelection);
-	// });
+	$("#dates").change(function() {
+		$(".athlete").addClass("visible");
+		dateSelection = $(this).find("option:selected").attr("data-selection");
+		filterAthletes(sportSelection, medalSelection, dateSelection);
+	});
 
 
-	function filterAthletes(sport, medal) {
-
-		$("#loadMore").addClass("noShow");
 
 
-		filterString = "."+sport+"."+medal;
+	function filterAthletes(sport, medal, date) {
+
+		// hide the more buttons once someone filters
+		$("#moreButtons").addClass("noShow");
+
+
+		//rerun isotope based on the new filter string that's passed
+		filterString = "."+sport+"."+medal+"."+date;
 		$grid.isotope({
 			filter: filterString
 		});
 
+		// lazyload in the images of any athlete that gets shown by filtering
 		$.each($(filterString), function(k,v) {
 			var imagePath = $(this).children("img").attr("data-src");
 			$(this).children("img").attr("src", imagePath);
 		});
 
+
+		// check to see if there are any athletes visible. If there are not,
+		// display the messaging that lets users know no athletes matched their criteria
+		if ($("#olympians").height() === 0) {
+			$("h6.chatterHed").removeClass("noShow");
+		} else {
+			$("h6.chatterHed").addClass("noShow");
+		}
+
+		setTimeout(function() {
+			if ($("#olympians").offset().top < $(window).scrollTop()) {
+				$("html, body").animate({
+					scrollTop: $("#olympians").offset().top - 100
+				}, 750);
+			}
+		}, 600);
+
+
 	}
 
+
+	// while scrolling, if the top of the olympians div is above the top of the
+	// window, make the filtering div sticky to the top
 	$(window).scroll(function() {
 		var athletesTop = $("#olympians").offset().top;
 		if ($(window).scrollTop() > athletesTop) {

@@ -1,12 +1,19 @@
 #scheduleDisplay {
   width: 100%;
   font-family: "Open Sans", Arial, sans-serif;
-  overflow: hidden; }
+  overflow: hidden;
+  margin: 4.8rem 0; }
   #scheduleDisplay h4 {
     font-family: Oswald, Arial, sans-serif;
     font-weight: bold;
     text-transform: uppercase;
     margin-bottom: .6rem; }
+
+.chatterHed {
+  font-family: Oswald, Arial, sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 1.2rem; }
 
 .chatter {
   font-size: 1.3rem;
@@ -70,28 +77,36 @@
       .upNext:nth-child(3n+3), .upNext:nth-child(5n+5) {
         margin-right: 0; } }
 
+@keyframes filterAnimation {
+  from {
+    -webkit-transform: translate3d(0, -500px, 0);
+    -moz-transform: translate3d(0, -500px, 0);
+    -o-transform: translate3d(0, -500px, 0);
+    transform: translate3d(0, -500px, 0); }
+  to {
+    -webkit-transform: translate3d(0, -500px, 0);
+    -moz-transform: translate3d(0, -500px, 0);
+    -o-transform: translate3d(0, -500px, 0);
+    transform: translate3d(0, 0, 0); } }
+
 #filters {
   margin: 2.4rem 0;
   padding: 2.4rem 0 2.4rem 1%;
   border-top: 1px solid #ebebeb;
   font-family: "Open Sans", Arial, sans-serif;
-  display: block;
-  border-bottom: 1px solid #ebebeb; }
+  display: block; }
   #filters h6 {
     font-weight: bold;
     float: left;
     margin-right: 10px;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     line-height: 2rem;
     margin-bottom: 0;
-    text-transform: uppercase;
-    width: 115px; }
+    text-transform: uppercase; }
   #filters select {
     margin: 0 20px 1.2rem 0;
     font-size: 1.6rem;
-    float: left;
-    width: 100%;
-    max-width: 150px; }
+    float: left; }
     #filters select:last-of-type {
       margin-right: 0; }
   #filters.fixed {
@@ -102,10 +117,17 @@
     width: 100%;
     margin-top: 0;
     left: 0;
-    padding: 1.2rem 5%; }
-  @media (max-width: 650px) {
+    padding: 1.2rem 5%;
+    border-bottom: 1px solid #ebebeb;
+    box-shadow: 0 2px 5px rgba(33, 33, 33, 0.3);
+    animation-name: filterAnimation;
+    animation-duration: .5s; }
+  @media (max-width: 800px) {
     #filters h6 {
-      clear: left; } }
+      clear: left;
+      width: 140px; }
+    #filters select {
+      width: 120px; } }
 
 .grid-sizer {
   width: 23.5%; }
@@ -322,6 +344,15 @@
     top: 20px;
     right: 20px;
     color: #212121; }
+    @media (max-width: 800px) {
+      .expanded .expander {
+        top: 20px;
+        right: 20px;
+        color: white; } }
+    @media (max-width: 500px) {
+      .expanded .expander {
+        top: 10px;
+        right: 10px; } }
   .expanded img {
     float: left;
     width: 500px; }
@@ -412,8 +443,13 @@
 .bronzeMedal {
   background-color: #cd7f32; }
 
-#loadMore {
-  width: 150px;
+#moreButtons {
+  width: 280px;
+  margin: 2.4rem auto 0; }
+
+.moreButton {
+  float: left;
+  width: 135px;
   font-family: "Open Sans", Arial, sans-serif;
   border: 2px solid #0185d3;
   border-radius: 5px;
@@ -424,18 +460,20 @@
   margin-bottom: 0;
   text-transform: uppercase;
   font-weight: bold;
-  margin: 0 auto;
+  margin: 0 10px 0 0;
   display: block;
   cursor: pointer;
   -webkit-transtion: all 0.25s ease-out;
   -moz-transition: all 0.25s ease-out;
   -o-transition: all 0.25s ease-out;
   transition: all 0.25s ease-out; }
-  #loadMore:hover {
+  .moreButton:hover {
     background-color: #0185d3;
     color: white; }
-  #loadMore:focus {
+  .moreButton:focus {
     outline: 0; }
+  .moreButton:last-of-type {
+    margin-right: 0; }
 
 .noShow {
   display: none; }
