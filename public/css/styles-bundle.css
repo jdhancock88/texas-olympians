@@ -304,7 +304,9 @@ VI. STORY HEAD, BYLINES AND INTRO
 
 #storyHead h2 {
   font-size: 3.2rem;
-  line-height: 4.2rem; }
+  line-height: 4.2rem;
+  max-width: 800px;
+  margin: 0 auto; }
 
 #storyHead h3 {
   font-family: 'Open Sans', Arial, sans-serif;
@@ -892,7 +894,7 @@ XX. ADS
   margin-bottom: 1.2rem; }
 
 .chatter {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   line-height: 1.8rem;
   margin-bottom: 2.4rem; }
 
@@ -916,7 +918,7 @@ XX. ADS
     font-family: Oswald, Arial, sans-serif;
     font-weight: bold;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1.8rem;
     line-height: 25px;
     margin-bottom: 0.6rem;
     padding: 0 0 .9rem 35px;
@@ -1003,7 +1005,9 @@ XX. ADS
       clear: left;
       width: 140px; }
     #filters select {
-      width: 120px; } }
+      width: 120px; }
+      #filters select:last-of-type {
+        margin-right: 20px; } }
 
 .grid-sizer {
   width: 23.5%; }

@@ -29,7 +29,7 @@
     margin-bottom: 1.2rem;
 }
 .chatter {
-    @include type(1.3rem, 1.8rem, 2.4rem);
+    @include type(1.4rem, 1.8rem, 2.4rem);
 }
 .upNext {
     width: 19%;
@@ -53,7 +53,7 @@
         font-family: $custom;
         font-weight: bold;
         cursor: pointer;
-        @include type(2rem, 25px, .6rem);
+        @include type(1.8rem, 25px, .6rem);
         padding: 0 0 .9rem 35px;
         border-bottom: 1px solid white;
         text-indent: 0px;
@@ -152,6 +152,9 @@
         }
         select {
             width: 120px;
+            &:last-of-type {
+                margin-right: 20px;
+            }
         }
     }
 }

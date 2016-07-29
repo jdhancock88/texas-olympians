@@ -634,9 +634,9 @@ $(document).ready(function() {
 
 		// if that athlete falls within 100 pixels of the bottom of the window
 		// or above the top, the window scrolls the athlete into view
-		if (y > top + (windowHeight - 100) || y < top) {
+		if (y > top + (windowHeight - 200) || y < top) {
 			$("html, body").animate({
-				scrollTop: y - 100
+				scrollTop: y - 150
 			}, 500);
 		}
 	}

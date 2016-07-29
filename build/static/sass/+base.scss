@@ -345,6 +345,8 @@ VI. STORY HEAD, BYLINES AND INTRO
 #storyHead h2 {
   font-size: 3.2rem;
   line-height: 4.2rem;
+  max-width: 800px;
+  margin: 0 auto;
 }
 #storyHead h3 {
   font-family: 'Open Sans', Arial, sans-serif;
