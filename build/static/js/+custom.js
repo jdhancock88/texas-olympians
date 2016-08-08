@@ -185,6 +185,8 @@ $(document).ready(function() {
 
 		console.log(todaysAths);
 
+		todaysAths = _.uniqBy(todaysAths, "name");
+
 		// passing our todayAths and the targetDate off to the function
 		// that builds out our divs of the athletes competing today
 		buildTodaysAths(todaysAths, targetDate);
@@ -223,26 +225,18 @@ $(document).ready(function() {
 				});
 
 			todaysAths.append("p")
-				.text(function(d) {
-					var content;
+				.html(function(d) {
+					var content =  "";
 					for (i=0; i < d.events.length; i++) {
-						if (d.events[i].next_date === targetDate) {
-							content = d.sport + ", " + d.events[i].event;
+						if (d.events[i].next_date === targetDate && d.events[i].completed !== "yes") {
+							content += d.sport + ", " + d.events[i].event + ": " + d.events[i].nexttime + ", " + d.events[i].channel+ ". <br />";
+						} else if (d.events[i].next_date === targetDate && d.events[i].completed === "yes") {
+							content += d.sport + ", " + d.events[i].event + ". <br />";
 						}
 					}
 					return content;
 				});
 
-			todaysAths.append("p")
-				.text(function(d) {
-					var content;
-					for (i=0; i < d.events.length; i++) {
-						if (d.events[i].next_date == targetDate) {
-							content = d.events[i].nexttime + ", " + d.events[i].channel;
-						}
-					}
-					return content;
-				});
 		} else {
 			$("#scheduleDisplay").remove();
 		}
@@ -270,9 +264,8 @@ $(document).ready(function() {
 			// check if it's expanded currently and show it, then reposition
 			// the window to accomodate any movement. It'll also run the showAthletes function
 			// with a number large enough to make sure all athletes are displayed
-
-			checkExpansion(athlete);
 			showAthletes(1000);
+			checkExpansion(athlete);
 
 		});
 

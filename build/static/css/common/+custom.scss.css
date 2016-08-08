@@ -36,6 +36,8 @@
     margin-right: 10px; }
   .upNext:nth-child(5n+5) {
     margin-right: 0; }
+  .upNext:nth-child(5n+6) {
+    clear: left; }
   .upNext h6 {
     font-family: Oswald, Arial, sans-serif;
     font-weight: bold;
@@ -60,14 +62,20 @@
       margin-right: 2%; }
       .upNext:nth-child(5n+5) {
         margin-right: 2%; }
+      .upNext:nth-child(5n+6) {
+        clear: none; }
       .upNext:nth-child(3n+3) {
-        margin-right: 0; } }
+        margin-right: 0; }
+      .upNext:nth-child(3n+4) {
+        clear: left; } }
   @media (max-width: 650px) {
     .upNext {
       width: 49%;
       margin-right: 2%; }
       .upNext:nth-child(3n+3) {
         margin-right: 2%; }
+      .upNext:nth-child(3n+4) {
+        clear: none; }
       .upNext:nth-child(even) {
         margin-right: 0; } }
   @media (max-width: 450px) {
@@ -326,16 +334,15 @@
   margin: 0rem 1% 2%; }
   .expanded .links {
     display: block;
-    width: 38%;
-    float: right; }
+    width: 100%; }
     @media (max-width: 1300px) {
       .expanded .links {
         width: 100%;
         float: none; } }
   .expanded .schedule {
-    width: 60%;
+    width: 100%;
     display: block;
-    float: left; }
+    margin-bottom: 1.2rem; }
     .expanded .schedule table {
       display: table; }
     @media (max-width: 1300px) {
@@ -378,7 +385,8 @@
     width: calc(100% - 500px);
     margin-top: 0;
     height: 500px;
-    padding: 20px; }
+    padding: 20px;
+    overflow-y: auto; }
     .expanded .athContent h4 {
       margin-bottom: .3rem; }
     .expanded .athContent .nameBlock {
