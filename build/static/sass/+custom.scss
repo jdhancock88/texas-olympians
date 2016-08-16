@@ -126,7 +126,7 @@
 #filters {
     margin: 2.4rem 0;
     padding: 2.4rem 0 2.4rem 1%;
-    border-top: 1px solid $black235;
+    border-top: 1px solid $gold;
     font-family: $sans;
     display: block;
     h6 {
@@ -156,6 +156,7 @@
         box-shadow: 0 2px 5px rgba(33,33,33,.3);
         animation-name: filterAnimation;
         animation-duration: .5s;
+        border-top: none;
     }
     @media(max-width: 800px) {
         h6 {
@@ -553,4 +554,42 @@
 
 .noShow {
     display: none;
+}
+
+#totalMedals {
+    font-family: $custom;
+    text-align: center;
+    max-width: 500px;
+    margin: 2.4rem auto 0;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid $gold;
+    h4 {
+        font-weight: normal;
+    }
+    h5 span {
+        margin-right: 10px;
+    }
+     h5 span:before {
+         @include psuedoElement(20px, 20px, relative);
+         display: inline-block;
+         border-radius: 50px;
+         margin-right: 5px;
+         top: 1px;
+     }
+}
+
+#totalGold:before {
+    background-color: $gold;
+}
+
+#totalSilver:before {
+    background-color: $silver;
+}
+
+#totalBronze:before {
+    background-color: $bronze;
+}
+
+#storyHead {
+    margin-top: 2.4rem;
 }

@@ -46,6 +46,11 @@ $(document).ready(function() {
 	var dates = [];
 
 
+	var totalGold = 0;
+	var totalSilver = 0;
+	var totalBronze = 0;
+
+
 	/////////////////////////////////////////////
 	///// GETTING THE DATA //////////////////////
 	/////////////////////////////////////////////
@@ -120,6 +125,8 @@ $(document).ready(function() {
 		athletes = data;
 		dataCounter++;
 
+		totalMedals(athletes);
+
 		if (dataCounter === 2) {
 			setupData(athletes, sked);
 		}
@@ -176,14 +183,11 @@ $(document).ready(function() {
 		// with each of the athletes that match the current date
 		for (i = 0; i < athletes.length; i++) {
 			for (k = 0; k < athletes[i].events.length; k++) {
-				console.log(athletes[i].events[k].next_date, targetDate);
 				if (athletes[i].events[k].next_date === targetDate) {
 					todaysAths.push(athletes[i]);
 				}
 			}
 		}
-
-		console.log(todaysAths);
 
 		todaysAths = _.uniqBy(todaysAths, "name");
 
@@ -204,7 +208,6 @@ $(document).ready(function() {
 
 
 	function buildTodaysAths(data, targetDate) {
-		console.log(data);
 		if (data.length > 0) {
 			var todaysAths = d3.select("#todaysAths").selectAll(".upNext")
 				.data(data);
@@ -282,7 +285,6 @@ $(document).ready(function() {
 
 	function buildOlympians(athletes, target) {
 
-		console.log(athletes);
 		var athDivs = d3.select(target).selectAll(".athlete")
 			.data(athletes);
 
@@ -769,6 +771,27 @@ $(document).ready(function() {
 
 
 	}
+
+
+	/////////////////////////////////////////////
+	///// GETTING MEDAL TOTALS //////////////////
+	/////////////////////////////////////////////
+
+
+	function totalMedals(data) {
+
+		$.each(data, function(k,v) {
+			totalGold += v.gold;
+			totalSilver += v.silver;
+			totalBronze += v.bronze;
+		});
+
+
+		$("#totalGold").text(totalGold);
+		$("#totalSilver").text(totalSilver);
+		$("#totalBronze").text(totalBronze);
+	}
+
 
 
 	// while scrolling, if the top of the olympians div is above the top of the
